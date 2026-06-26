@@ -172,7 +172,7 @@
 
 <div class="controls">
     <label for="mode"><strong>Theorem / fact:</strong></label>
-    <select id="mode"><option value="radiiTriangle">A triangle formed by two radii and a chord is isosceles</option><option value="radiusTangent">The angle between a tangent and radius is 90°</option><option value="equalTangents">Tangents which meet at the same point are equal in length</option><option value="centre">The angle at the centre is twice the angle at the circumference</option><option value="semicircle">The angle in a semicircle is 90°</option><option value="sameSegment">Angles in the same segment are equal</option><option value="cyclic">The opposite angles in a cyclic quadrilateral total 180°</option><option value="alternateSegment">Alternate Segment Theorem</option></select>
+    <select id="mode"></select>
     <button id="reset">Reset diagram</button>
   </div>
   
@@ -261,7 +261,14 @@ function circlePoint(p, label, color='#d33'){
 }
 function label(text, x, y, color='#111', size=18){ ctx.fillStyle=color; ctx.font=`${size}px Arial`; ctx.fillText(text, x, y); }
 function drawCircle(){ ctx.strokeStyle='#222'; ctx.lineWidth=2.5; ctx.beginPath(); ctx.arc(C.x,C.y,R,0,Math.PI*2); ctx.stroke(); circlePoint(C,'O',colours.blue); }
-function updatePanel(title, measure, hint){ document.getElementById('title').textContent=title; document.getElementById('measure').innerHTML=measure; document.getElementById('hint').innerHTML=hint; }
+function updatePanel(title, measure, hint){
+  const titleEl = document.getElementById('title');
+  const measureEl = document.getElementById('measure');
+  const hintEl = document.getElementById('hint');
+  if(titleEl) titleEl.textContent = title;
+  if(measureEl) measureEl.innerHTML = measure;
+  if(hintEl) hintEl.innerHTML = hint;
+}
 
 function normAngle(a){ while(a<0) a += Math.PI*2; while(a>=Math.PI*2) a -= Math.PI*2; return a; }
 function signedSmallDelta(a1,a2){
