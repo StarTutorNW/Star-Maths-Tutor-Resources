@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<!-- saved from url=(0144)file:///C:/Users/MICHAE~1.ISH/AppData/Local/Temp/MicrosoftEdgeDownloads/85992db6-b586-44ed-ba83-24cfd61c8e0b/circle_theorems_interactive_v9.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive Circle Theorems</title>
+<style>
+  body { font-family: Arial, sans-serif; margin: 0; background: #f7f7f7; color: #222; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 18px; }
+  h1 { margin: 0 0 8px; font-size: 28px; }
+  .controls { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin: 12px 0; }
+  select, button { font-size: 16px; padding: 8px 10px; border-radius: 8px; border: 1px solid #bbb; background: white; }
+  button { cursor: pointer; }
+  .main { display: grid; grid-template-columns: 520px; gap: 18px; align-items: start; }
+  canvas { background: white; border: 1px solid #ccc; border-radius: 0 0 12px 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); width: 520px; height: 520px; }
+  .panel { background: white; border: 1px solid #ddd; border-radius: 12px; padding: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .theorem { font-size: 21px; font-weight: bold; margin-bottom: 10px; }
+  .measure { font-size: 18px; line-height: 1.5; margin: 12px 0; }
+  .hint { font-size: 15px; line-height: 1.45; color: #444; }
+  .small { color: #666; font-size: 14px; margin-top: 12px; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 999px; background: #eee; margin: 2px; }
+  .swatch { display:inline-block; width:13px; height:13px; border-radius:3px; margin-right:6px; vertical-align:-1px; }
+  @media (max-width: 1000px) { .main { grid-template-columns: 1fr; } canvas { width: 100%; height: auto; } }
+</style>
+
+<style>
+
+
+
+
+
+
+</style>
+
+
+
+
+
+<style>
+  .topHeader{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    margin:0 0 10px 0;
+  }
+  .topLogo{
+    width:92px;
+    height:auto;
+    display:block;
+  }
+  .topHeader h1{
+    margin:0;
+    font-size:30px;
+    line-height:1;
+  }
+  .controls{
+    margin:8px 0 10px 0 !important;
+  }
+  .noteBanner{
+    width:520px;
+    background:white;
+    border:1px solid #ccc;
+    border-bottom:none;
+    border-radius:12px 12px 0 0;
+    box-shadow:0 2px 8px rgba(0,0,0,0.08);
+    padding:10px 16px 8px 16px;
+    box-sizing:border-box;
+  }
+  .exploreNote{
+    font-style:italic;
+    color:#555;
+    font-size:17px;
+    line-height:1.25;
+  }
+  .wrap{
+    padding-top:12px !important;
+  }
+</style>
+
+
+<style>
+  body { overflow-y:auto; }
+  .wrap{
+    max-width: 980px !important;
+    padding: 8px 14px !important;
+  }
+  .topHeader{
+    margin:0 0 6px 0 !important;
+    gap:12px !important;
+  }
+  .topLogo{
+    width:72px !important;
+  }
+  .topHeader h1{
+    font-size:26px !important;
+  }
+  .controls{
+    margin:5px 0 6px 0 !important;
+  }
+  select, button{
+    font-size:14px !important;
+    padding:6px 8px !important;
+    border-radius:7px !important;
+  }
+  .noteBanner{
+    width:520px !important;
+    padding:7px 12px 6px 12px !important;
+  }
+  .exploreNote{
+    font-size:15px !important;
+    line-height:1.15 !important;
+  }
+  .main{
+    gap:0 !important;
+  }
+  canvas{
+    width:520px !important;
+    height:520px !important;
+  }
+</style>
+
+
+<style>
+  .wrap{
+    padding:6px 10px !important;
+    max-width:760px !important;
+  }
+  .topHeader{
+    margin:0 0 4px 0 !important;
+    gap:10px !important;
+  }
+  .topLogo{
+    width:58px !important;
+  }
+  .topHeader h1{
+    font-size:23px !important;
+  }
+  .controls{
+    margin:3px 0 4px 0 !important;
+    gap:8px !important;
+  }
+  select, button{
+    font-size:13px !important;
+    padding:5px 7px !important;
+  }
+  .noteBanner{
+    width:520px !important;
+    padding:5px 10px 5px 10px !important;
+  }
+  .exploreNote{
+    font-size:14px !important;
+    line-height:1.1 !important;
+  }
+  canvas{
+    width:520px !important;
+    height:520px !important;
+  }
+</style>
+
+</head>
+<body>
+
+
+
+
+<div class="wrap">
+
+  <div class="topHeader">
+    <img src="data:image/png;base64,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" alt="Star logo" class="topLogo">
+    <h1>Interactive Circle Theorems</h1>
+  </div>
+
+<div class="controls">
+    <label for="mode"><strong>Theorem / fact:</strong></label>
+    <select id="mode"><option value="radiiTriangle">A triangle formed by two radii and a chord is isosceles</option><option value="radiusTangent">The angle between a tangent and radius is 90°</option><option value="equalTangents">Tangents which meet at the same point are equal in length</option><option value="centre">The angle at the centre is twice the angle at the circumference</option><option value="semicircle">The angle in a semicircle is 90°</option><option value="sameSegment">Angles in the same segment are equal</option><option value="cyclic">The opposite angles in a cyclic quadrilateral total 180°</option><option value="alternateSegment">Alternate Segment Theorem</option></select>
+    <button id="reset">Reset diagram</button>
+  </div>
+  
+<div id="theoremBanner" class="noteBanner">
+    <div class="exploreNote">Drag the points to explore the theorem. What changes? What stays the same?</div>
+  </div>
+
+<div class="main">
+    <canvas id="canvas" width="520" height="520"></canvas>
+    </div>
+  </div>
+
+<script>
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+const C = {x: 260, y: 250};
+const R = 170;
+let drag = null;
+
+const colours = {
+  blue: '#2b6cb0', orange: '#dd6b20', purple: '#805ad5', green: '#2f855a', red: '#c53030', pink:'#d53f8c', grey:'#4a5568'
+};
+
+const modes = [
+  {id:'radiiTriangle', name:'A triangle formed by two radii and a chord is isosceles'},
+  {id:'radiusTangent', name:'The angle between a tangent and radius is 90°'},
+  {id:'equalTangents', name:'Tangents which meet at the same point are equal in length'},
+  {id:'centre', name:'The angle at the centre is twice the angle at the circumference'},
+  {id:'semicircle', name:'The angle in a semicircle is 90°'},
+  {id:'sameSegment', name:'Angles in the same segment are equal'},
+  {id:'cyclic', name:'The opposite angles in a cyclic quadrilateral total 180°'},
+  {id:'alternateSegment', name:'Alternate Segment Theorem'}
+];
+const select = document.getElementById('mode');
+modes.forEach(m => { const o = document.createElement('option'); o.value=m.id; o.textContent=m.name; select.appendChild(o); });
+
+let pts = {};
+function pointOnCircle(deg){ const a = deg*Math.PI/180; return {x:C.x + R*Math.cos(a), y:C.y + R*Math.sin(a), circle:true}; }
+function pointOnCircleRad(a){ return {x:C.x+R*Math.cos(a), y:C.y+R*Math.sin(a), circle:true}; }
+
+function reset(){
+  const m = select.value;
+  pts = {
+    A: pointOnCircle(210), B: pointOnCircle(330), P: pointOnCircle(85), Q: pointOnCircle(145),
+    T: pointOnCircle(310), X: {x: 475, y: 150, free:true}
+  };
+  if(m==='radiiTriangle'){ pts.A=pointOnCircle(215); pts.B=pointOnCircle(325); }
+  if(m==='semicircle'){ pts.A=pointOnCircle(180); pts.B=pointOnCircle(0); pts.P=pointOnCircle(70); }
+  if(m==='sameSegment'){ pts.A=pointOnCircle(215); pts.B=pointOnCircle(325); pts.P=pointOnCircle(75); pts.Q=pointOnCircle(135); }
+  if(m==='cyclic'){ pts.A=pointOnCircle(215); pts.B=pointOnCircle(310); pts.P=pointOnCircle(35); pts.Q=pointOnCircle(125); }
+  if(m==='radiusTangent'){ pts.T=pointOnCircle(305); }
+  if(m==='equalTangents'){ pts.X={x: 475, y: 150, free:true}; }
+  if(m==='alternateSegment'){ pts.A=pointOnCircle(210); pts.B=pointOnCircle(325); pts.P=pointOnCircle(80); }
+  draw();
+}
+select.onchange = reset;
+document.getElementById('reset').onclick = reset;
+
+function dist(a,b){ return Math.hypot(a.x-b.x, a.y-b.y); }
+function angleAt(a,b,c){
+  const v1={x:a.x-b.x,y:a.y-b.y}, v2={x:c.x-b.x,y:c.y-b.y};
+  const denom = Math.hypot(v1.x,v1.y)*Math.hypot(v2.x,v2.y);
+  let ang = Math.acos(Math.max(-1, Math.min(1, (v1.x*v2.x+v1.y*v2.y)/denom)));
+  return ang*180/Math.PI;
+}
+function angleBetweenDirs(d1,d2){
+  let diff = Math.abs((d2-d1)*180/Math.PI)%360;
+  return diff>180 ? 360-diff : diff;
+}
+function tangentLineAt(p, len=300){
+  const r = {x:p.x-C.x, y:p.y-C.y};
+  const u = {x:-r.y/R, y:r.x/R};
+  return [{x:p.x-u.x*len, y:p.y-u.y*len}, {x:p.x+u.x*len, y:p.y+u.y*len}];
+}
+function tangentPointsFromExternalPoint(x){
+  const dx=x.x-C.x, dy=x.y-C.y, d=Math.hypot(dx,dy);
+  if(d <= R+8) return null;
+  const theta=Math.atan2(dy,dx), alpha=Math.acos(R/d);
+  return [pointOnCircleRad(theta+alpha), pointOnCircleRad(theta-alpha)];
+}
+
+function line(a,b, color='#333', width=2){ ctx.strokeStyle=color; ctx.lineWidth=width; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); }
+function circlePoint(p, label, color='#d33'){
+  ctx.fillStyle=color; ctx.beginPath(); ctx.arc(p.x,p.y,8,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#111'; ctx.font='bold 17px Arial'; ctx.fillText(label, p.x+10, p.y-10);
+}
+function label(text, x, y, color='#111', size=18){ ctx.fillStyle=color; ctx.font=`${size}px Arial`; ctx.fillText(text, x, y); }
+function drawCircle(){ ctx.strokeStyle='#222'; ctx.lineWidth=2.5; ctx.beginPath(); ctx.arc(C.x,C.y,R,0,Math.PI*2); ctx.stroke(); circlePoint(C,'O',colours.blue); }
+function updatePanel(title, measure, hint){ document.getElementById('title').textContent=title; document.getElementById('measure').innerHTML=measure; document.getElementById('hint').innerHTML=hint; }
+
+function normAngle(a){ while(a<0) a += Math.PI*2; while(a>=Math.PI*2) a -= Math.PI*2; return a; }
+function signedSmallDelta(a1,a2){
+  let d = normAngle(a2) - normAngle(a1);
+  if(d > Math.PI) d -= Math.PI*2;
+  if(d < -Math.PI) d += Math.PI*2;
+  return d;
+}
+function drawAngle(a,b,c, text, color, radius=38, preferReflex=false){
+  const a1 = Math.atan2(a.y-b.y,a.x-b.x);
+  const a2 = Math.atan2(c.y-b.y,c.x-b.x);
+  let d = signedSmallDelta(a1,a2);
+  if(preferReflex){ d = d>0 ? d-2*Math.PI : d+2*Math.PI; }
+  ctx.strokeStyle=color; ctx.lineWidth=4; ctx.beginPath(); ctx.arc(b.x,b.y,radius,a1,a1+d,d<0); ctx.stroke();
+  const mid = a1 + d/2;
+  ctx.fillStyle=color; ctx.font='bold 16px Arial';
+  ctx.fillText(text, b.x + Math.cos(mid)*(radius+18)-10, b.y + Math.sin(mid)*(radius+18)+5);
+}
+function drawRightAngle(a,b,c,color=colours.red,size=24){
+  const u = unit({x:a.x-b.x,y:a.y-b.y});
+  const v = unit({x:c.x-b.x,y:c.y-b.y});
+  const p1={x:b.x+u.x*size,y:b.y+u.y*size};
+  const p2={x:p1.x+v.x*size,y:p1.y+v.y*size};
+  const p3={x:b.x+v.x*size,y:b.y+v.y*size};
+  ctx.strokeStyle=color; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(p1.x,p1.y); ctx.lineTo(p2.x,p2.y); ctx.lineTo(p3.x,p3.y); ctx.stroke();
+}
+function unit(v){ const m=Math.hypot(v.x,v.y); return {x:v.x/m,y:v.y/m}; }
+function tickOnSegment(a,b,color='#111',count=1,offset=0){
+  const mid={x:(a.x+b.x)/2,y:(a.y+b.y)/2};
+  const u=unit({x:b.x-a.x,y:b.y-a.y});
+  const n={x:-u.y,y:u.x};
+  ctx.strokeStyle=color; ctx.lineWidth=3;
+  for(let i=0;i<count;i++){
+    const along = (i-(count-1)/2)*9 + offset;
+    const m={x:mid.x+u.x*along,y:mid.y+u.y*along};
+    ctx.beginPath(); ctx.moveTo(m.x-n.x*9,m.y-n.y*9); ctx.lineTo(m.x+n.x*9,m.y+n.y*9); ctx.stroke();
+  }
+}
+function tangentAngleAt(T, chordEnd){
+  const tan = tangentLineAt(T, 100); const v = tan[1];
+  let ang = angleAt(v,T,chordEnd);
+  if(ang>90) ang = 180-ang;
+  return ang;
+}
+
+function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height); drawCircle();
+  const m = select.value;
+  if(m==='radiiTriangle'){
+    let {A,B}=pts; line(C,A,colours.blue,3); line(C,B,colours.blue,3); line(A,B,colours.orange,3);
+    tickOnSegment(C,A,colours.blue,1); tickOnSegment(C,B,colours.blue,1);
+    const baseA=angleAt(C,A,B), baseB=angleAt(A,B,C), centre=angleAt(A,C,B);
+    drawAngle(C,A,B,`${baseA.toFixed(0)}°`,colours.green,34); drawAngle(A,B,C,`${baseB.toFixed(0)}°`,colours.green,34); drawAngle(A,C,B,`${centre.toFixed(0)}°`,colours.orange,48);
+    circlePoint(A,'A'); circlePoint(B,'B');
+    updatePanel('A triangle formed by two radii and a chord is isosceles', `<span class="swatch" style="background:${colours.blue}"></span>OA = OB = radii<br><span class="swatch" style="background:${colours.green}"></span>Base angles are equal: <strong>${baseA.toFixed(1)}°</strong> and <strong>${baseB.toFixed(1)}°</strong>`, 'Drag A or B. The two blue sides are always radii, so the triangle OAB is isosceles.');
+  }
+  if(m==='radiusTangent'){
+    let {T}=pts; const [u,v]=tangentLineAt(T); line(u,v,colours.purple,3); line(C,T,colours.blue,3); drawRightAngle(C,T,v,colours.red); circlePoint(T,'T');
+    label('90°', T.x+18, T.y+24, colours.red, 17);
+    updatePanel('The angle between a tangent and radius is 90°', `<span class="swatch" style="background:${colours.red}"></span>Angle between radius OT and tangent = <strong>90°</strong>`, 'Drag T. The tangent changes direction, but it always meets the radius at a right angle.');
+  }
+  if(m==='equalTangents'){
+    let X=pts.X; const pair=tangentPointsFromExternalPoint(X);
+    if(pair){ const [T,U]=pair; line(X,T,colours.purple,3); line(X,U,colours.purple,3); line(C,T,colours.blue); line(C,U,colours.blue); tickOnSegment(X,T,colours.purple,1); tickOnSegment(X,U,colours.purple,1); drawRightAngle(C,T,X,colours.red,20); drawRightAngle(C,U,X,colours.red,20); circlePoint(T,'T'); circlePoint(U,'U'); circlePoint(X,'X','#111');
+      updatePanel('Tangents which meet at the same point are equal in length', `<span class="swatch" style="background:${colours.purple}"></span>XT = <strong>${dist(X,T).toFixed(1)}</strong><br><span class="swatch" style="background:${colours.purple}"></span>XU = <strong>${dist(X,U).toFixed(1)}</strong>`, 'Drag X outside the circle. The matching tick marks show the equal tangent lengths.');
+    } else { circlePoint(X,'X','#111'); updatePanel('Tangents which meet at the same point are equal in length','Move X outside the circle.','Drag X away from the circle to create two tangents.'); }
+  }
+  if(m==='centre'){
+    let {A,B,P}=pts; line(C,A,colours.blue); line(C,B,colours.blue); line(P,A,colours.orange); line(P,B,colours.orange);
+    const cen=angleAt(A,C,B); const circ=angleAt(A,P,B); drawAngle(A,C,B,`${cen.toFixed(0)}°`,colours.orange,50); drawAngle(A,P,B,`${circ.toFixed(0)}°`,colours.green,42);
+    circlePoint(A,'A'); circlePoint(B,'B'); circlePoint(P,'P');
+    updatePanel('The angle at the centre is twice the angle at the circumference', `<span class="swatch" style="background:${colours.orange}"></span>∠AOB = <strong>${cen.toFixed(1)}°</strong><br><span class="swatch" style="background:${colours.green}"></span>∠APB = <strong>${circ.toFixed(1)}°</strong><br>Centre angle ÷ circumference angle ≈ <strong>${(cen/circ).toFixed(2)}</strong>`, 'Drag A, B or P. The centre angle is double the circumference angle standing on the same arc AB.');
+  }
+  if(m==='semicircle'){
+    let A=pts.A, P=pts.P;
+    // The second end of the diameter is calculated from A, so AB always passes through O.
+    let D={x:2*C.x-A.x, y:2*C.y-A.y, circle:true};
+    pts.B = D;
+    line(A,D,colours.blue,3);
+    line(P,A,colours.grey,2.5);
+    line(P,D,colours.grey,2.5);
+    drawRightAngle(A,P,D,colours.red,28);
+    label('90°', P.x+18, P.y+20, colours.red, 17);
+    circlePoint(A,'A');
+    circlePoint(P,'B');
+    circlePoint(D,'', '#8a8a8a');
+    
+    const a=angleAt(A,P,D);
+    updatePanel('The angle in a semicircle is 90°', `<span class="swatch" style="background:${colours.red}"></span>Angle at B = <strong>${a.toFixed(1)}°</strong>`, 'Drag A to rotate the diameter. The point opposite A moves automatically so the line always passes through O. Drag B around the circumference and the angle stays 90°.');
+  }
+  if(m==='sameSegment'){
+    let {A,B,P,Q}=pts; line(A,B,colours.orange,3); line(P,A); line(P,B); line(Q,A); line(Q,B);
+    const a1=angleAt(A,P,B), a2=angleAt(A,Q,B); drawAngle(A,P,B,`${a1.toFixed(0)}°`,colours.green,36); drawAngle(A,Q,B,`${a2.toFixed(0)}°`,colours.green,36);
+    ['A','B','P','Q'].forEach(k=>circlePoint(pts[k],k));
+    updatePanel('Angles in the same segment are equal', `<span class="swatch" style="background:${colours.green}"></span>∠APB = <strong>${a1.toFixed(1)}°</strong><br><span class="swatch" style="background:${colours.green}"></span>∠AQB = <strong>${a2.toFixed(1)}°</strong>`, 'Drag P and Q around the same side of chord AB. The matching green angles remain equal.');
+  }
+  if(m==='cyclic'){
+    let {A,B,P,Q}=pts; line(A,B); line(B,P); line(P,Q); line(Q,A);
+    const a=angleAt(Q,A,B), p=angleAt(B,P,Q); const b=angleAt(A,B,P), q=angleAt(P,Q,A);
+    drawAngle(Q,A,B,`${a.toFixed(0)}°`,colours.green,36); drawAngle(B,P,Q,`${p.toFixed(0)}°`,colours.green,36);
+    drawAngle(A,B,P,`${b.toFixed(0)}°`,colours.pink,36); drawAngle(P,Q,A,`${q.toFixed(0)}°`,colours.pink,36);
+    ['A','B','P','Q'].forEach(k=>circlePoint(pts[k],k));
+    updatePanel('The opposite angles in a cyclic quadrilateral total 180°', `<span class="swatch" style="background:${colours.green}"></span>∠A + ∠P = <strong>${(a+p).toFixed(1)}°</strong><br><span class="swatch" style="background:${colours.pink}"></span>∠B + ∠Q = <strong>${(b+q).toFixed(1)}°</strong>`, 'Drag the vertices. As long as all four points stay on the circle, opposite angles add to 180°.');
+  }
+  if(m==='alternateSegment'){
+    let {A,B,P}=pts; const [u,v]=tangentLineAt(A); line(u,v,colours.purple,3); line(A,B,colours.orange,3); line(P,A); line(P,B);
+    const tanAng=tangentAngleAt(A,B), seg=angleAt(A,P,B);
+    // choose the tangent ray giving the acute/equal alternate-segment angle
+    const ang1=angleAt(v,A,B), endpoint = ang1<=90 ? v : u;
+    drawAngle(endpoint,A,B,`${tanAng.toFixed(0)}°`,colours.green,42); drawAngle(A,P,B,`${seg.toFixed(0)}°`,colours.green,42);
+    circlePoint(A,'A'); circlePoint(B,'B'); circlePoint(P,'P');
+    updatePanel('Alternate Segment Theorem', `<span class="swatch" style="background:${colours.green}"></span>Angle between tangent and chord AB = <strong>${tanAng.toFixed(1)}°</strong><br><span class="swatch" style="background:${colours.green}"></span>Angle in alternate segment ∠APB = <strong>${seg.toFixed(1)}°</strong>`, 'Drag A, B or P. The matching green angles are equal: tangent-chord angle = angle in the alternate segment.');
+  }
+}
+
+function mousePos(e){ const r=canvas.getBoundingClientRect(); return {x:(e.clientX-r.left)*canvas.width/r.width, y:(e.clientY-r.top)*canvas.height/r.height}; }
+canvas.addEventListener('mousedown', e => {
+  const p=mousePos(e); drag=null;
+  if(select.value==='semicircle'){
+    const D={x:2*C.x-pts.A.x, y:2*C.y-pts.A.y, circle:true};
+    if(dist(p,pts.A)<18) drag='A';
+    else if(dist(p,pts.P)<18) drag='P';
+    // The opposite end of the diameter is deliberately not draggable.
+    return;
+  }
+  for(const k in pts){ if(dist(p,pts[k])<18) drag=k; }
+});
+canvas.addEventListener('mousemove', e => {
+  if(!drag) return; const p=mousePos(e);
+  if(select.value==='semicircle'){
+    const a=Math.atan2(p.y-C.y,p.x-C.x);
+    if(drag==='A') pts.A=pointOnCircleRad(a);
+    if(drag==='P') pts.P=pointOnCircleRad(a);
+    pts.B={x:2*C.x-pts.A.x, y:2*C.y-pts.A.y, circle:true};
+    draw();
+    return;
+  }
+  if(pts[drag].free){ pts[drag].x=p.x; pts[drag].y=p.y; }
+  else { const a=Math.atan2(p.y-C.y,p.x-C.x); pts[drag]=pointOnCircleRad(a); }
+  draw();
+});
+window.addEventListener('mouseup',()=>drag=null);
+reset();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body></html>
