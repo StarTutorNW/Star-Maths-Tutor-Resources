@@ -74,7 +74,23 @@ details.explainer[open] summary::after{content:"−"}
   font-size:17px;
   line-height:1.5;
 }
-.explainGrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.explainVisual{
+  display:flex;
+  justify-content:center;
+  margin:8px 0 16px;
+}
+.explainVisualCard{
+  width:min(360px,100%);
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:#fff;
+  padding:8px;
+}
+.explainGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+}
 .explainBox{
   border:1px solid #efb8c2;
   border-radius:12px;
@@ -99,146 +115,771 @@ details.explainer[open] summary::after{content:"−"}
 .frac .bottom{padding:.08em .2em 0}
 
 /* Main workspace */
-.workspace{
-  display:grid;
-  grid-template-columns:minmax(520px,.95fr) minmax(650px,1.2fr);
-  gap:18px;
-  align-items:start;
+.workspace{display:block}
+.mainInteractive{padding:14px}
+.mainControls{margin-bottom:8px}
+.mainInteractive{padding:14px}
+
+.mainInteractive{padding:14px}
+
+.sharedControls{
+  position:relative;
+  min-height:150px;
+  margin-bottom:4px;
 }
-.leftWork{display:flex;flex-direction:column;gap:14px}
-.controls{padding:14px 18px}
-.controlTop{display:flex;justify-content:space-between;align-items:center;gap:12px}
-.controlTop strong{font-size:22px}
+.angleStatus{
+  position:absolute;
+  left:0;
+  top:64px;
+  display:flex;
+  align-items:baseline;
+  justify-content:flex-start;
+  gap:10px;
+  padding:0 8px 0 2px;
+}
+.angleStatus strong{font-size:22px}
 #angleReadout{
-  font-family:"Cambria Math","Times New Roman",serif;
-  font-size:34px;font-weight:800;
+  font-size:30px;
+  line-height:1;
 }
-.sliderArea{padding:8px 6px 0}
-.tickRow{position:relative;height:30px;margin:0 8px}
-.tick{
-  position:absolute;transform:translateX(-50%);top:0;
-  font-size:13px;font-weight:700;white-space:nowrap;
-}
-.tick::after{
-  content:"";display:block;width:1px;height:9px;background:#111827;margin:3px auto 0;
-}
-input[type=range]{width:100%;accent-color:#111827}
-.caption{text-align:center;color:#475467;margin:8px 0 12px}
-.plotOptions{border-top:1px solid var(--line);padding-top:11px}
-.plotOptions strong{display:block;margin-bottom:8px}
-.checks{display:flex;gap:24px;flex-wrap:wrap}
-.checks label{display:flex;align-items:center;gap:8px;font-size:17px;font-weight:650}
-.checks input{width:20px;height:20px}
-.resetBtn{
-  border:1px solid #cfd6e3;
-  background:#fff;
-  color:#111827;
-  border-radius:9px;
-  padding:8px 13px;
-  font-size:15px;
-  font-weight:800;
-  cursor:pointer;
-}
-.resetBtn:hover{background:#f8fafc}
-.circleCard{padding:8px}
-#circleSvg{display:block;width:100%;height:auto}
 
-.graphs{display:flex;flex-direction:column;gap:16px}
-.graphCard{padding:8px 12px 12px}
-.graphTitle{
+/* The graph occupies x = 660..1480 inside a 1500-unit shared SVG.
+   Its plotted angle axis runs from global x = 732 to 1460.
+   These exact percentages are reused here, so slider ticks and graph ticks
+   share the same physical x positions after responsive scaling. */
+.mainSliderTrack{
+  position:absolute;
+  left:48.8%;
+  right:2.6667%;
+  top:6px;
+}
+.mainSliderTrack .tickRow{margin-left:0;margin-right:0}
+
+.sliderAxisLabels{
+  position:relative;
+  height:31px;
+  margin:0;
+}
+.sliderAxisLabels span{
+  position:absolute;
+  top:0;
+  transform:translateX(-50%);
+  font-size:20px;
+  line-height:1;
+  font-weight:700;
+  white-space:nowrap;
+}
+.sliderAxisLabels .neg{color:#e11d48}
+.sliderAxisLabels .mid{color:#16a34a}
+.sliderAxisLabels .pos{color:#2563eb}
+.sliderAxisLabels span:first-child{transform:translateX(0)}
+.sliderAxisLabels span:last-child{transform:translateX(-100%)}
+.mainSliderTrack input[type=range]{width:100%;margin:0}
+.mainSliderCaption{
   text-align:center;
-  font-family:"Cambria Math","Times New Roman",serif;
-  font-size:28px;
-  margin:4px 0 -2px;
+  color:#475467;
+  margin-top:7px;
 }
-.graphTitle.sin{color:var(--cos)} .graphTitle.cos{color:var(--sin)}
-.graphSvg{display:block;width:100%;height:auto}
+.graphControlLine{
+  position:absolute;
+  left:46.5%;
+  right:1.5%;
+  top:82px;
+  display:flex;
+  align-items:flex-start;
+  gap:18px;
+}
+.graphToggles{
+  display:flex;
+  align-items:center;
+  gap:18px;
+  flex-wrap:wrap;
+  flex:0 0 auto;
+}
+.graphToggles label{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  font-size:17px;
+  font-weight:750;
+  white-space:nowrap;
+}
+.graphToggles input{width:20px;height:20px}
+.promptBlock{
+  min-width:0;
+  flex:1;
+}
+.graphPrompt{
+  font-size:14px;
+  line-height:1.35;
+  font-weight:650;
+}
+.graphPrompt.sinPrompt{color:#2563eb}
+.graphPrompt.cosPrompt{color:#ef4444}
 
-
-.tanSection{
-  margin-top:18px;
+.sharedViz{
+  width:100%;
   overflow:hidden;
 }
-.tanSection summary{
+#circleSvg{
+  display:block;
+  width:100%;
+  height:auto;
+}
+
+
+@media(max-width:1150px){
+  .sharedControls{
+    max-width:none;
+    margin-right:0;
+  }
+  .tanLayout{grid-template-columns:1fr}
+}
+@media(max-width:700px){
+  .graphControlLine{flex-direction:column}
+  .promptBlock{min-width:0}
+  .explainGrid{grid-template-columns:1fr}
+  .tanCalc{
+    white-space:normal;
+    font-size:18px;
+  }
+}
+
+
+/* ===== Tangent section rebuild ===== */
+details.tanSection{
+  margin-top:18px;
+  margin-bottom:0;
+  overflow:hidden;
+}
+
+/* Intentionally identical to "How does the unit circle work?" */
+details.tanSection > summary{
   list-style:none;
   cursor:pointer;
   padding:14px 18px;
   font-size:20px;
   font-weight:800;
-  color:#7c3aed;
+  color:#5b21b6;
   display:flex;
   align-items:center;
   justify-content:space-between;
   user-select:none;
 }
-.tanSection summary::-webkit-details-marker{display:none}
-.tanSection summary::after{
+details.tanSection > summary::-webkit-details-marker{display:none}
+details.tanSection > summary::after{
   content:"＋";
   font-size:25px;
+  color:#5b21b6;
 }
-.tanSection[open] summary::after{content:"−"}
-.tanInner{
+details.tanSection[open] > summary::after{content:"−"}
+
+details.tanSection .tanInner{
   border-top:1px solid var(--line);
   padding:16px 18px 18px;
 }
-.tanIntro{
-  font-size:17px;
-  line-height:1.5;
-  margin:0 0 12px;
-}
-.tanLayout{
+
+details.tanSection .tanKeyIdea{
   display:grid;
-  grid-template-columns:minmax(360px,.7fr) minmax(620px,1.3fr);
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+  margin-bottom:16px;
+}
+details.tanSection .tanIdeaCard{
+  border:1px solid var(--line);
+  border-radius:11px;
+  background:#fbfcff;
+  padding:12px 15px;
+  min-height:92px;
+}
+details.tanSection .tanIdeaLead{
+  margin:0 0 7px;
+  font-size:16px;
+  font-weight:750;
+}
+details.tanSection .tanIdeaEquation{
+  margin:0;
+  text-align:center;
+  font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;
+  font-size:24px;
+  font-style:italic;
+}
+
+details.tanSection .tanLayout{
+  display:grid;
+  grid-template-columns:minmax(500px,.82fr) minmax(650px,1.18fr);
   gap:18px;
   align-items:start;
 }
-.tanControls{
+
+details.tanSection .tanControls{
   border:1px solid var(--line);
   border-radius:12px;
-  padding:14px 16px;
-  background:#fbfcff;
-}
-.tanCalc{
-  margin:15px 0 8px;
-  text-align:center;
-  font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;
-  font-size:25px;
-  line-height:1.55;
-  font-style:italic;
-  white-space:nowrap;
-  overflow-x:auto;
-  padding-bottom:4px;
-}
-.tanNote{
-  margin:12px 0 0;
-  padding:10px 12px;
-  background:#f5f3ff;
-  border-left:4px solid #7c3aed;
-  border-radius:8px;
-  line-height:1.45;
-}
-.tanGraphCard{
-  border:1px solid var(--line);
-  border-radius:12px;
-  padding:8px 12px 12px;
+  padding:16px 18px;
   background:#fff;
 }
-.tanGraphTitle{
+
+details.tanSection .tanControlTop{
+  display:flex;
+  align-items:baseline;
+  gap:10px;
+  margin-bottom:10px;
+}
+details.tanSection .tanControlTop strong{
+  font-size:21px;
+}
+details.tanSection #tanAngleReadout{
+  font-family:"Cambria Math","Times New Roman",serif;
+  font-size:29px;
+  line-height:1;
+  font-weight:800;
+  color:#7c3aed;
+}
+
+details.tanSection .tanSliderLabels{
+  position:relative;
+  height:27px;
+  margin:0 7px;
+}
+details.tanSection .tanSliderLabels span{
+  position:absolute;
+  top:0;
+  transform:translateX(-50%);
+  font-size:14px;
+  font-weight:700;
+  white-space:nowrap;
+}
+details.tanSection .tanSliderLabels span:first-child{transform:translateX(0)}
+details.tanSection .tanSliderLabels span:last-child{transform:translateX(-100%)}
+details.tanSection #tanSlider{
+  width:100%;
+  accent-color:#7c3aed;
+}
+
+details.tanSection .tanCalculationPanel{
+  margin-top:18px;
+  padding:15px 14px;
+  border:1px solid #ddd6fe;
+  border-radius:12px;
+  background:#faf8ff;
+}
+
+details.tanSection .tanCalc{
+  margin:0;
+  text-align:center;
+  font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;
+  font-size:clamp(19px,1.48vw,24px);
+  line-height:1.5;
+  font-style:italic;
+  white-space:nowrap;
+}
+
+details.tanSection .tanGradientRow{
+  display:grid;
+  grid-template-columns:minmax(245px,.9fr) minmax(210px,1.1fr);
+  gap:14px;
+  align-items:center;
+  margin-top:14px;
+  padding-top:13px;
+  border-top:1px solid #e9e4fb;
+}
+details.tanSection .tanGradientEquation{
+  text-align:center;
+  font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;
+  font-size:20px;
+  line-height:1.45;
+  font-style:italic;
+}
+details.tanSection .tanMiniVisual{
+  display:flex;
+  justify-content:center;
+}
+details.tanSection .tanMiniVisual svg{
+  width:min(220px,100%);
+  height:auto;
+  display:block;
+}
+
+details.tanSection .tanAsymptoteNote{
+  display:none;
+  margin-top:12px;
+  padding:10px 12px;
+  border-left:4px solid #7c3aed;
+  border-radius:8px;
+  background:#f5f3ff;
+  color:#4c1d95;
+  font-size:15px;
+  line-height:1.4;
+  font-weight:650;
+}
+details.tanSection .tanAsymptoteNote.show{
+  display:block;
+}
+
+details.tanSection .tanGraphCard{
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:9px 12px 12px;
+  background:#fff;
+}
+details.tanSection .tanGraphTitle{
   text-align:center;
   font-family:"Cambria Math","Times New Roman",serif;
   font-size:28px;
   color:#7c3aed;
-  margin:4px 0 -2px;
+  margin:2px 0 2px;
 }
-#tanGraph{display:block;width:100%;height:auto}
-@media(max-width:1050px){
-  .tanLayout{grid-template-columns:1fr}
+details.tanSection #tanGraph{
+  display:block;
+  width:100%;
+  height:auto;
 }
 
-@media(max-width:1050px){
-  .workspace{grid-template-columns:1fr}
-  .explainGrid{grid-template-columns:1fr}
+@media(max-width:1150px){
+  details.tanSection .tanLayout{grid-template-columns:1fr}
 }
+@media(max-width:700px){
+  details.tanSection .tanKeyIdea{grid-template-columns:1fr}
+  details.tanSection .tanCalc{
+    white-space:normal;
+    font-size:18px;
+  }
+  details.tanSection .tanGradientRow{grid-template-columns:1fr}
+}
+
+
+/* ===== Tangent hierarchy refinements ===== */
+details.tanSection .tanKeyIdea{
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+
+details.tanSection .tanIdeaCard{
+  padding:14px 18px;
+  min-height:142px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+
+details.tanSection .tanIdeaLead{
+  text-align:center;
+  margin:0 0 10px;
+  font-size:17px;
+}
+
+details.tanSection .tanIdentityLabel,
+details.tanSection .tanConstructionLabel{
+  display:inline-block;
+  align-self:center;
+  margin-bottom:8px;
+  padding:4px 9px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:850;
+  letter-spacing:.02em;
+  text-transform:uppercase;
+}
+
+details.tanSection .tanIdentityLabel{
+  background:#ede9fe;
+  color:#5b21b6;
+}
+
+details.tanSection .tanConstructionLabel{
+  background:#eef2ff;
+  color:#3730a3;
+}
+
+details.tanSection .tanIdeaEquation{
+  font-size:31px;
+  line-height:1.4;
+}
+
+details.tanSection .tanConstructionEquation{
+  font-size:24px;
+  line-height:1.5;
+}
+
+details.tanSection .tanConstructionNote{
+  margin:8px 0 0;
+  text-align:center;
+  color:#475467;
+  font-size:13px;
+  line-height:1.35;
+}
+
+details.tanSection .tanControlTop{
+  margin-bottom:12px;
+}
+
+details.tanSection #tanAngleReadout{
+  font-size:23px;
+}
+
+details.tanSection .tanCalculationPanel{
+  padding:22px 18px;
+  background:#faf8ff;
+  border:1.5px solid #c4b5fd;
+}
+
+details.tanSection .tanCalc{
+  font-size:clamp(25px,2vw,34px);
+  line-height:1.55;
+  font-weight:600;
+}
+
+details.tanSection .tanAsymptoteNote{
+  max-width:680px;
+  margin-left:auto;
+  margin-right:auto;
+  text-align:center;
+}
+
+details.tanSection .tanGraphTitle{
+  font-size:24px;
+  margin:0 0 2px;
+}
+
+/* The previous mini gradient diagram is intentionally removed.
+   The geometric derivation now lives in the concept box above. */
+details.tanSection .tanGradientRow{
+  display:none !important;
+}
+
+
+details.tanSection .tanSliderTrack{
+  margin:0 8px;
+}
+details.tanSection .tanSliderTrack #tanSlider{
+  width:100%;
+  margin:0;
+}
+details.tanSection .tanSliderTrack .tanSliderLabels{
+  margin:0;
+}
+
+
+/* ===== Tangent v17 refinements ===== */
+details.tanSection .tanCalc{
+  width:100%;
+  max-width:100%;
+  white-space:nowrap;
+  overflow:hidden;
+  font-size:34px;
+  line-height:1.55;
+  box-sizing:border-box;
+}
+
+details.tanSection .tanCalculationPanel{
+  padding:22px 20px;
+}
+
+details.tanSection .tanAsymptoteExplainer{
+  margin-top:16px;
+  padding:15px 16px;
+  border:1px solid var(--line);
+  border-radius:11px;
+  background:#fff;
+}
+
+details.tanSection .tanAsymptoteExplainer h4{
+  margin:0 0 7px;
+  color:#5b21b6;
+  font-size:18px;
+}
+
+details.tanSection .tanAsymptoteExplainer p{
+  margin:5px 0;
+  font-size:15px;
+  line-height:1.45;
+}
+
+details.tanSection .tanAsymptoteEquation{
+  margin:10px 0 4px;
+  text-align:center;
+  font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;
+  font-size:21px;
+  font-style:italic;
+}
+
+@media(max-width:700px){
+  details.tanSection .tanCalc{
+    white-space:normal;
+    overflow:visible;
+    font-size:19px !important;
+  }
+}
+
+
+/* ===== Main sin/cos control refinements ===== */
+.sharedControls{
+  width:100%;
+  max-width:640px;
+  margin-left:auto;
+  margin-right:22px;
+  margin-bottom:10px;
+}
+.angleStatus{
+  display:flex;
+  align-items:baseline;
+  justify-content:flex-start;
+  gap:8px;
+  margin-bottom:10px;
+}
+.angleStatus strong{font-size:23px}
+#angleReadout{font-size:27px}
+
+.mainSliderTrack{
+  padding-top:2px;
+}
+.mainSliderTicks{
+  position:relative;
+  height:10px;
+  margin-top:-2px;
+  margin-bottom:-5px;
+  pointer-events:none;
+}
+.mainSliderTicks span{
+  position:absolute;
+  bottom:0;
+  width:1.5px;
+  height:8px;
+  background:#111827;
+  transform:translateX(-50%);
+  opacity:.85;
+}
+.mainSliderCaption{
+  text-align:center;
+  color:#475467;
+  margin-top:7px;
+  font-size:14px;
+}
+
+.graphControlLine{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:8px;
+  margin-top:10px;
+}
+.graphToggles{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  flex-wrap:wrap;
+}
+.graphToggles label{font-size:16px}
+.graphToggles .resetBtn{
+  padding:6px 11px;
+  font-size:14px;
+  font-weight:750;
+}
+.promptBlock{
+  width:100%;
+  padding-left:0;
+}
+.graphPrompt{
+  font-size:13.25px;
+  line-height:1.32;
+  font-weight:500;
+}
+.graphPrompt + .graphPrompt{margin-top:3px}
+
+details.tanSection .tanSliderTicks{
+  position:relative;
+  height:10px;
+  margin-top:-2px;
+  margin-bottom:-5px;
+  pointer-events:none;
+}
+details.tanSection .tanSliderTicks span{
+  position:absolute;
+  bottom:0;
+  width:1.5px;
+  height:8px;
+  background:#111827;
+  transform:translateX(-50%);
+  opacity:.85;
+}
+
+.exactCoordMath text{
+  font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;
+  font-size:14px;
+  font-weight:700;
+}
+.exactCoordMath .fracBar{
+  stroke:#111827;
+  stroke-width:1.1;
+}
+
+
+/* ===== v22: exact main-control alignment ===== */
+
+/* The combined SVG is 1500 units wide.
+   The trig graph's plotted x-axis is global x = 732..1460.
+   Therefore the slider/control area uses the exact same 48.8%..97.3333% span. */
+.sharedControls{
+  position:relative !important;
+  width:100% !important;
+  max-width:none !important;
+  min-height:188px !important;
+  margin:0 0 4px 0 !important;
+}
+
+.angleStatus{
+  position:absolute !important;
+  left:48.8% !important;
+  top:0 !important;
+  width:auto !important;
+  margin:0 !important;
+  padding:0 !important;
+  display:flex !important;
+  align-items:baseline !important;
+  justify-content:flex-start !important;
+  gap:8px !important;
+}
+
+.mainSliderTrack{
+  position:absolute !important;
+  left:48.8% !important;
+  right:2.6667% !important;
+  top:35px !important;
+  width:auto !important;
+  margin:0 !important;
+  padding:0 !important;
+}
+
+/* Every slider label is centred on its true angle position.
+   There is enough white space beyond both ends, so no edge special-case is needed. */
+.sliderAxisLabels span,
+.sliderAxisLabels span:first-child,
+.sliderAxisLabels span:last-child{
+  transform:translateX(-50%) !important;
+}
+
+.mainSliderTrack input[type=range]{
+  width:100% !important;
+  margin:0 !important;
+  display:block;
+}
+
+.mainSliderCaption{
+  margin-top:7px !important;
+  text-align:center !important;
+  font-size:14px !important;
+  color:#475467 !important;
+}
+
+.graphControlLine{
+  position:absolute !important;
+  left:48.8% !important;
+  right:2.6667% !important;
+  top:108px !important;
+  width:auto !important;
+  margin:0 !important;
+  padding:0 !important;
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:flex-start !important;
+  gap:7px !important;
+}
+
+.graphToggles{
+  display:flex !important;
+  align-items:center !important;
+  gap:16px !important;
+  flex-wrap:wrap !important;
+}
+
+.promptBlock{
+  width:100% !important;
+  min-width:0 !important;
+}
+
+.graphPrompt{
+  font-size:13px !important;
+  line-height:1.3 !important;
+  font-weight:500 !important;
+}
+
+.exactCoordMath text{
+  font-size:14px !important;
+}
+
+/* Only on genuinely narrow screens do we abandon the shared-axis desktop geometry. */
+@media(max-width:900px){
+  .sharedControls{
+    min-height:230px !important;
+  }
+  .angleStatus{
+    position:relative !important;
+    left:auto !important;
+    top:auto !important;
+    margin-bottom:12px !important;
+  }
+  .mainSliderTrack{
+    position:relative !important;
+    left:auto !important;
+    right:auto !important;
+    top:auto !important;
+    margin:0 3% !important;
+  }
+  .graphControlLine{
+    position:relative !important;
+    left:auto !important;
+    right:auto !important;
+    top:auto !important;
+    margin:12px 3% 0 !important;
+  }
+}
+
+
+/* ===== v24 main section heading ===== */
+.mainInteractive{
+  position:relative;
+  padding-top:112px;
+}
+.mainSectionHeading{
+  position:absolute;
+  left:22px;
+  top:18px;
+  z-index:3;
+  max-width:520px;
+}
+.mainSectionHeading h2{
+  margin:0;
+  color:#5b21b6;
+  font-size:24px;
+  font-weight:800;
+  line-height:1.15;
+  letter-spacing:-.015em;
+}
+.mainSectionHeading p{
+  margin:7px 0 0;
+  color:#475467;
+  font-size:14px;
+  line-height:1.35;
+}
+.mainSectionHeading .mathTitle{
+  font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;
+  font-style:italic;
+  white-space:nowrap;
+}
+@media(max-width:900px){
+  .mainInteractive{
+    padding-top:14px;
+  }
+  .mainSectionHeading{
+    position:relative;
+    left:auto;
+    top:auto;
+    max-width:none;
+    margin:0 0 16px;
+  }
+}
+}
+
 </style>
 </head>
 <body>
@@ -253,8 +894,50 @@ input[type=range]{width:100%;accent-color:#111827}
     <div class="explainInner">
       <p class="explainIntro">
         A unit circle has radius <strong>1</strong>, so the hypotenuse of the right-angled triangle is always <strong>1</strong>.
-        The horizontal side is the point's <span class="math">x</span>-coordinate and the vertical side is its <span class="math">y</span>-coordinate.
+        The adjacent side of the right-angled triangle is the point's <span class="math">x</span>-coordinate and the opposite side of the right-angled triangle is the point's <span class="math">y</span>-coordinate.
       </p>
+
+
+      <div class="explainVisual">
+        <div class="explainVisualCard">
+          <svg viewBox="0 0 360 300" role="img" aria-label="Unit circle at 30 degrees">
+            <defs>
+              <marker id="expArrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+                <polygon points="0 0,7 3.5,0 7" fill="#111827"></polygon>
+              </marker>
+            </defs>
+            <circle cx="180" cy="150" r="105" fill="#fff" stroke="#111827" stroke-width="2.5"/>
+            <line x1="50" y1="150" x2="318" y2="150" stroke="#111827" stroke-width="2.2" marker-end="url(#expArrow)"/>
+            <line x1="180" y1="280" x2="180" y2="20" stroke="#111827" stroke-width="2.2" marker-end="url(#expArrow)"/>
+            <text x="324" y="158" font-size="19" font-family="Cambria Math" font-style="italic">x</text>
+            <text x="189" y="21" font-size="19" font-family="Cambria Math" font-style="italic">y</text>
+
+            <line x1="180" y1="150" x2="270.93" y2="150" stroke="#ef4444" stroke-width="4"/>
+            <line x1="270.93" y1="150" x2="270.93" y2="97.5" stroke="#2563eb" stroke-width="4"/>
+            <line x1="180" y1="150" x2="270.93" y2="97.5" stroke="#111827" stroke-width="4"/>
+            <path d="M253 150 L253 132 L270.93 132" fill="none" stroke="#111827" stroke-width="2"/>
+            <path d="M224 150 A44 44 0 0 0 218.1 128" fill="#55c5ee" fill-opacity=".55" stroke="#111827" stroke-width="1.5"/>
+            <text x="235" y="147" font-size="18" font-family="Cambria Math">30°</text>
+            <circle cx="270.93" cy="97.5" r="8" fill="#a7f3f0" stroke="#111827" stroke-width="2.5"/>
+            <g class="exactCoordMath" transform="translate(282,54)">
+              <text x="0" y="19">(</text>
+
+              <text x="13" y="9">√3</text>
+              <line class="fracBar" x1="11" y1="13" x2="37" y2="13"/>
+              <text x="24" y="29" text-anchor="middle">2</text>
+
+              <text x="41" y="19">,</text>
+
+              <text x="55" y="9">1</text>
+              <line class="fracBar" x1="49" y1="13" x2="63" y2="13"/>
+              <text x="56" y="29" text-anchor="middle">2</text>
+
+              <text x="67" y="19">)</text>
+            </g>
+            <text x="226" y="115" font-size="17">1</text>
+          </svg>
+        </div>
+      </div>
 
       <div class="explainGrid">
         <div class="explainBox red">
@@ -297,40 +980,75 @@ input[type=range]{width:100%;accent-color:#111827}
   </details>
 
   <div class="workspace">
-    <div class="leftWork">
-      <section class="card controls">
-        <div class="controlTop">
-          <strong>Angle <span class="math">(θ)</span></strong>
+    <section class="card mainInteractive">
+      <div class="mainSectionHeading">
+        <h2>
+          The Unit Circle,
+          <span class="mathTitle">y = sin(θ)</span>
+          and
+          <span class="mathTitle">y = cos(θ)</span>
+        </h2>
+        <p>Drag the slider or the point on the circle to create the graphs.</p>
+      </div>
+      <div class="sharedControls">
+        <div class="angleStatus">
+          <strong><span class="math">θ</span> =</strong>
           <div id="angleReadout">0°</div>
         </div>
 
-        <div class="sliderArea">
-          <div class="tickRow" aria-hidden="true">
-            <span class="tick" style="left:0%">−360°</span>
-            <span class="tick" style="left:16.6667%">−180°</span>
-            <span class="tick" style="left:33.3333%">0°</span>
-            <span class="tick" style="left:50%">180°</span>
-            <span class="tick" style="left:66.6667%">360°</span>
-            <span class="tick" style="left:83.3333%">540°</span>
-            <span class="tick" style="left:100%">720°</span>
+        <div class="mainSliderTrack">
+          <div class="sliderAxisLabels" aria-hidden="true">
+            <span class="neg" style="left:0%">−360°</span>
+            <span class="neg" style="left:16.6667%">−180°</span>
+            <span class="mid" style="left:33.3333%">0°</span>
+            <span class="mid" style="left:50%">180°</span>
+            <span class="mid" style="left:66.6667%">360°</span>
+            <span class="pos" style="left:83.3333%">540°</span>
+            <span class="pos" style="left:100%">720°</span>
+          </div>
+          <div class="mainSliderTicks" aria-hidden="true">
+            <span style="left:0%"></span>
+            <span style="left:8.3333%"></span>
+            <span style="left:16.6667%"></span>
+            <span style="left:25%"></span>
+            <span style="left:33.3333%"></span>
+            <span style="left:41.6667%"></span>
+            <span style="left:50%"></span>
+            <span style="left:58.3333%"></span>
+            <span style="left:66.6667%"></span>
+            <span style="left:75%"></span>
+            <span style="left:83.3333%"></span>
+            <span style="left:91.6667%"></span>
+            <span style="left:100%"></span>
           </div>
           <input id="angleSlider" type="range" min="-360" max="720" step="1" value="0">
+          
         </div>
 
-        <div class="caption">Drag the slider or the point on the circle</div>
-
-        <div class="plotOptions">
-          <strong>Show on graph:</strong>
-          <div class="checks">
-            <label><input id="sinCheck" type="checkbox" checked style="accent-color:#2563eb"> Plot <span class="math">sin(θ)</span></label>
-            <label><input id="cosCheck" type="checkbox" checked style="accent-color:#ef4444"> Plot <span class="math">cos(θ)</span></label>
+        <div class="graphControlLine">
+          <div class="graphToggles">
+            <label style="color:#2563eb">
+              <input id="sinCheck" type="checkbox" checked style="accent-color:#2563eb">
+              sin(θ)
+            </label>
+            <label style="color:#ef4444">
+              <input id="cosCheck" type="checkbox" checked style="accent-color:#ef4444">
+              cos(θ)
+            </label>
             <button id="resetBtn" class="resetBtn" type="button">Reset</button>
           </div>
-        </div>
-      </section>
 
-      <section class="card circleCard">
-        <svg id="circleSvg" viewBox="0 0 650 650">
+          <div class="promptBlock">
+            <div class="graphPrompt sinPrompt" id="sinPrompt">For sin(θ), focus on the angle and the y-coordinate on the unit circle.</div>
+            <div class="graphPrompt cosPrompt" id="cosPrompt">For cos(θ), focus on the angle and the x-coordinate on the unit circle.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sharedViz">
+        <svg id="circleSvg" viewBox="0 0 1500 650" preserveAspectRatio="xMidYMid meet">
+          <g id="circleGroup">
+
           <defs>
             <marker id="arrow" markerWidth="8" markerHeight="8" refX="6.6" refY="4" orient="auto">
               <polygon points="0,0 8,4 0,8" fill="#111827"/>
@@ -347,8 +1065,8 @@ input[type=range]{width:100%;accent-color:#111827}
           <text x="337" y="49" font-size="28" font-family="Cambria Math" font-style="italic">y</text>
           <text x="550" y="352" font-size="24">1</text>
           <text x="64" y="352" font-size="24">−1</text>
-          <text x="338" y="119" font-size="24">1</text>
-          <text x="338" y="568" font-size="24">−1</text>
+          <text x="338" y="120" font-size="24">1</text>
+          <text x="338" y="540" font-size="24">−1</text>
 
           <!-- angle region at origin -->
           <path id="angleFill" d="" fill="#55c5ee" fill-opacity=".72" stroke="#111827" stroke-width="2"/>
@@ -366,69 +1084,111 @@ input[type=range]{width:100%;accent-color:#111827}
 
           <text id="coordLabel" x="548" y="305" font-size="21" font-weight="700"></text>
           <text id="hypLabel" x="425" y="300" font-size="23">1</text>
+        
+          </g>
+
+          <line x1="650" y1="32" x2="650" y2="618" stroke="#d8deea" stroke-width="1.5"/>
+
+          <g id="combinedGraph" transform="translate(660 0)"></g>
         </svg>
-      </section>
-
-      
-    </div>
-
-    <div class="graphs">
-      <section class="card graphCard" id="sinCard">
-        <div class="graphTitle sin">y = sin(θ)</div>
-        <svg id="sinGraph" class="graphSvg" viewBox="0 0 720 330"></svg>
-      </section>
-
-      <section class="card graphCard" id="cosCard">
-        <div class="graphTitle cos">y = cos(θ)</div>
-        <svg id="cosGraph" class="graphSvg" viewBox="0 0 720 330"></svg>
-      </section>
-    </div>
+      </div>
+    </section>
 
   </div>
 
-  <details class="card tanSection">
+<details class="card tanSection">
     <summary>What about the graph of tan(θ)?</summary>
+
     <div class="tanInner">
-      <p class="tanIntro">
-        Tangent can be found from sine and cosine:
-        <span class="math">tan(θ) = sin(θ) / cos(θ)</span>.
-        On the unit circle, <span class="math">tan(θ)</span> is also the
-        <strong>gradient of the hypotenuse</strong> (the line from the origin to the point on the circle).
-      </p>
+      <div class="tanKeyIdea">
+        <div class="tanIdeaCard">
+          <span class="tanIdentityLabel">Trigonometric identity</span>
+          <p class="tanIdeaLead">Tangent can always be calculated from sine and cosine.</p>
+          <div class="tanIdeaEquation">
+            tan(θ) =
+            <span class="frac"><span class="top">sin(θ)</span><span class="bottom">cos(θ)</span></span>
+          </div>
+        </div>
+
+        <div class="tanIdeaCard">
+          <span class="tanConstructionLabel">In this unit-circle construction</span>
+          <p class="tanIdeaLead">The gradient of the radius line is also tan(θ).</p>
+          <div class="tanIdeaEquation tanConstructionEquation">
+            gradient =
+            <span class="frac"><span class="top">rise</span><span class="bottom">run</span></span>
+            =
+            <span class="frac"><span class="top">y</span><span class="bottom">x</span></span>
+            =
+            <span class="frac"><span class="top">sin(θ)</span><span class="bottom">cos(θ)</span></span>
+            = tan(θ)
+          </div>
+          <p class="tanConstructionNote">
+            This follows from the unit-circle coordinates x = cos(θ) and y = sin(θ);
+            it is not a separate trigonometric identity.
+          </p>
+        </div>
+      </div>
 
       <div class="tanLayout">
         <div class="tanControls">
-          <div class="controlTop">
-            <strong>Angle <span class="math">(θ)</span></strong>
-            <div id="tanAngleReadout" style="font-family:'Cambria Math','Times New Roman',serif;font-size:32px;font-weight:800;color:#7c3aed">0°</div>
+          <div class="tanControlTop">
+            <strong><span class="math">θ</span> =</strong>
+            <div id="tanAngleReadout">0°</div>
           </div>
 
-          <div class="sliderArea">
-            <div class="tickRow" aria-hidden="true">
-              <span class="tick" style="left:0%">−360°</span>
-              <span class="tick" style="left:12.5%">−270°</span>
-              <span class="tick" style="left:25%">−180°</span>
-              <span class="tick" style="left:37.5%">−90°</span>
-              <span class="tick" style="left:50%">0°</span>
-              <span class="tick" style="left:62.5%">90°</span>
-              <span class="tick" style="left:75%">180°</span>
-              <span class="tick" style="left:87.5%">270°</span>
-              <span class="tick" style="left:100%">360°</span>
+          <div class="tanSliderTrack">
+            <div class="tanSliderLabels" aria-hidden="true">
+              <span style="left:0%">−360°</span>
+              <span style="left:12.5%">−270°</span>
+              <span style="left:25%">−180°</span>
+              <span style="left:37.5%">−90°</span>
+              <span style="left:50%">0°</span>
+              <span style="left:62.5%">90°</span>
+              <span style="left:75%">180°</span>
+              <span style="left:87.5%">270°</span>
+              <span style="left:100%">360°</span>
             </div>
-            <input id="tanSlider" type="range" min="-360" max="360" step="1" value="0">
+            <div class="tanSliderTicks" aria-hidden="true">
+              <span style="left:0%"></span>
+              <span style="left:12.5%"></span>
+              <span style="left:25%"></span>
+              <span style="left:37.5%"></span>
+              <span style="left:50%"></span>
+              <span style="left:62.5%"></span>
+              <span style="left:75%"></span>
+              <span style="left:87.5%"></span>
+              <span style="left:100%"></span>
+            </div>
+            <input id="tanSlider" type="range" min="-360" max="360" step="5" value="0">
           </div>
 
-          <div class="tanCalc" id="tanCalculation">
-            tan(0°) =
-            <span class="frac"><span class="top">sin(0°)</span><span class="bottom">cos(0°)</span></span>
-            =
-            <span class="frac"><span class="top">0</span><span class="bottom">1</span></span>
-            = 0
+          <div class="tanCalculationPanel">
+            <div class="tanCalc" id="tanCalculation">
+              tan(0°) =
+              <span class="frac"><span class="top">sin(0°)</span><span class="bottom">cos(0°)</span></span>
+              =
+              <span class="frac"><span class="top">0</span><span class="bottom">1</span></span>
+              = 0
+            </div>
+            <div class="tanAsymptoteNote" id="tanAsymptoteNote"></div>
           </div>
 
-          <div class="tanNote">
-            When <span class="math">cos(θ) = 0</span>, the division is undefined.
-            This happens at 90° + 180°n, which creates the vertical asymptotes in the tangent graph.
+          <div class="tanAsymptoteExplainer">
+            <h4>What is an asymptote?</h4>
+            <p>
+              An asymptote is a line that a graph gets closer and closer to, but does not reach.
+            </p>
+            <p>
+              At ±90°, ±270°, … the cosine value is 0, so tangent would require division by 0:
+            </p>
+            <div class="tanAsymptoteEquation">
+              tan(θ) =
+              <span class="frac"><span class="top">sin(θ)</span><span class="bottom">0</span></span>
+              = undefined
+            </div>
+            <p>
+              That is why the tangent graph has vertical asymptotes at those angles.
+            </p>
           </div>
         </div>
 
@@ -446,12 +1206,11 @@ const slider=document.getElementById('angleSlider');
 const angleReadout=document.getElementById('angleReadout');
 const sinCheck=document.getElementById('sinCheck');
 const cosCheck=document.getElementById('cosCheck');
-const sinCard=document.getElementById('sinCard');
-const cosCard=document.getElementById('cosCard');
 const resetBtn=document.getElementById('resetBtn');
 const tanSlider=document.getElementById('tanSlider');
 const tanAngleReadout=document.getElementById('tanAngleReadout');
 const tanCalculation=document.getElementById('tanCalculation');
+const tanAsymptoteNote=document.getElementById('tanAsymptoteNote');
 
 const circleSvg=document.getElementById('circleSvg');
 const dragPoint=document.getElementById('dragPoint');
@@ -579,76 +1338,148 @@ function updateCircle(a){
 
 }
 
-function buildGraph(svgId,fn,color){
-  const svg=document.getElementById(svgId),NS='http://www.w3.org/2000/svg';
-  const x0=60,x1=696,y0=32,y1=270,xmin=-360,xmax=720;
+function buildCombinedGraph(){
+  const svg=document.getElementById('combinedGraph');
+  const NS='http://www.w3.org/2000/svg';
+
+  // Exact vertical alignment with the unit circle:
+  // +1 = y 115, 0 = y 325, -1 = y 535.
+  // The full y-axis itself runs from y 55 to y 595, matching the circle.
+  const x0=72,x1=800,y0=55,y1=595,xmin=-360,xmax=720;
   const xMap=a=>x0+(a-xmin)/(xmax-xmin)*(x1-x0);
-  const yMap=v=>(y0+y1)/2-v*((y1-y0)/2-20);
-  function E(n,a={}){
-    const e=document.createElementNS(NS,n);
-    Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));
+  // Same coordinate system as the unit circle:
+  // y=1 -> 115, y=0 -> 325, y=-1 -> 535.
+  const yMap=v=>325-v*210;
+
+  function E(name,attrs={}){
+    const e=document.createElementNS(NS,name);
+    Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));
     return e;
   }
 
-  for(let a=-360;a<=360;a+=90){
+  // grid
+  for(let a=-360;a<=720;a+=90){
     const x=xMap(a);
-    svg.appendChild(E('line',{x1:x,y1:y0,x2:x,y2:y1,stroke:'#e5e7eb'}));
+    svg.appendChild(E('line',{
+      x1:x,y1:y0,x2:x,y2:y1,
+      stroke:'#e5e7eb','stroke-width':1
+    }));
   }
+
   [-1,-.5,0,.5,1].forEach(v=>{
     const y=yMap(v);
-    svg.appendChild(E('line',{x1:x0,y1:y,x2:x1,y2:y,stroke:v===0?'#111827':'#e5e7eb','stroke-width':v===0?1.7:1}));
+    svg.appendChild(E('line',{
+      x1:x0,y1:y,x2:x1,y2:y,
+      stroke:v===0?'#111827':'#e5e7eb',
+      'stroke-width':v===0?1.8:1
+    }));
   });
 
+  // y-axis at 0 degrees
   const axisX=xMap(0);
-  svg.appendChild(E('line',{x1:axisX,y1:y0,x2:axisX,y2:y1,stroke:'#111827','stroke-width':2.6}));
+  svg.appendChild(E('line',{
+    x1:axisX,y1:y0,x2:axisX,y2:y1,
+    stroke:'#111827','stroke-width':2.8
+  }));
 
   [-360,-180,0,180,360,540,720].forEach(a=>{
     const t=E('text',{
-      x:xMap(a),y:y1+25,'text-anchor':'middle','font-size':14,'font-weight':700,
+      x:xMap(a),y:yMap(0)+31,
+      'text-anchor':'middle',
+      'font-size':20,
+      'font-weight':700,
       fill:a<0?'#e11d48':a<=360?'#16a34a':'#2563eb'
     });
-    t.textContent=a+'°';svg.appendChild(t);
+    t.textContent=a+'°';
+    svg.appendChild(t);
   });
+
   [-1,0,1].forEach(v=>{
-    const t=E('text',{x:x0-11,y:yMap(v)+5,'text-anchor':'end','font-size':14});
-    t.textContent=v;svg.appendChild(t);
+    const t=E('text',{
+      x:x0-18,y:yMap(v)+7,
+      'text-anchor':'end',
+      'font-size':22,
+      'font-weight':600
+    });
+    t.textContent=v;
+    svg.appendChild(t);
   });
-  const theta=E('text',{x:(x0+x1)/2,y:320,'text-anchor':'middle','font-size':18,'font-family':'Cambria Math','font-style':'italic'});
-  theta.textContent='θ (degrees)';svg.appendChild(theta);
 
-  const path=E('path',{fill:'none',stroke:color,'stroke-width':3.2,'stroke-linecap':'round','stroke-linejoin':'round'});
-  svg.appendChild(path);
+  const sinPath=E('path',{
+    fill:'none',
+    stroke:'#2563eb',
+    'stroke-width':3.4,
+    'stroke-linecap':'round',
+    'stroke-linejoin':'round'
+  });
+  const cosPath=E('path',{
+    fill:'none',
+    stroke:'#ef4444',
+    'stroke-width':3.4,
+    'stroke-linecap':'round',
+    'stroke-linejoin':'round'
+  });
+  svg.appendChild(sinPath);
+  svg.appendChild(cosPath);
 
-  const dot=E('circle',{r:6.5,fill:color,stroke:'#111827','stroke-width':1.2});
-  svg.appendChild(dot);
-  const guide=E('line',{stroke:'#111827','stroke-width':1.1,'stroke-dasharray':'5 5',opacity:.45});
-  svg.appendChild(guide);
+  const sinDot=E('circle',{
+    r:7,fill:'#2563eb',
+    stroke:'#111827','stroke-width':1.1
+  });
+  const cosDot=E('circle',{
+    r:7,fill:'#ef4444',
+    stroke:'#111827','stroke-width':1.1
+  });
+  svg.appendChild(sinDot);
+  svg.appendChild(cosDot);
 
-  function rebuild(){
+  function makePath(fn){
     const arr=[...visited].sort((a,b)=>a-b);
     let d='',prev=null;
     arr.forEach(a=>{
-      const x=xMap(a),y=yMap(fn(a*Math.PI/180));
-      if(prev===null || a-prev>1)d+=` M ${x} ${y}`;
+      const x=xMap(a);
+      const y=yMap(fn(a*Math.PI/180));
+      if(prev===null || a-prev>1) d+=` M ${x} ${y}`;
       else d+=` L ${x} ${y}`;
       prev=a;
     });
-    path.setAttribute('d',d.trim());
+    return d.trim();
   }
+
+  function rebuild(){
+    sinPath.setAttribute('d',makePath(Math.sin));
+    cosPath.setAttribute('d',makePath(Math.cos));
+
+    const showSin=sinCheck.checked;
+    const showCos=cosCheck.checked;
+
+    sinPath.setAttribute('visibility',showSin?'visible':'hidden');
+    sinDot.setAttribute('visibility',showSin?'visible':'hidden');
+    cosPath.setAttribute('visibility',showCos?'visible':'hidden');
+    cosDot.setAttribute('visibility',showCos?'visible':'hidden');
+
+    document.getElementById('sinPrompt').style.display=showSin?'block':'none';
+    document.getElementById('cosPrompt').style.display=showCos?'block':'none';
+  }
+
   return{
     update(a){
       rebuild();
-      const x=xMap(a),y=yMap(fn(a*Math.PI/180));
-      dot.setAttribute('cx',x);dot.setAttribute('cy',y);
-      guide.setAttribute('x1',x);guide.setAttribute('x2',x);
-      guide.setAttribute('y1',y0);guide.setAttribute('y2',y1);
+
+      const x=xMap(a);
+      const sy=yMap(Math.sin(a*Math.PI/180));
+      const cy=yMap(Math.cos(a*Math.PI/180));
+
+      sinDot.setAttribute('cx',x);
+      sinDot.setAttribute('cy',sy);
+      cosDot.setAttribute('cx',x);
+      cosDot.setAttribute('cy',cy);
     },
     rebuild
   };
 }
 
-const sinGraph=buildGraph('sinGraph',Math.sin,'#2563eb');
-const cosGraph=buildGraph('cosGraph',Math.cos,'#ef4444');
+const combinedGraph=buildCombinedGraph();
 
 function addVisited(from,to){
   const lo=Math.min(Math.round(from),Math.round(to));
@@ -666,21 +1497,19 @@ function updateAll(a,trace=true){
   angleReadout.textContent=a+'°';
   angleReadout.style.color=rangeColor(a);
   updateCircle(a);
-  sinGraph.update(a);
-  cosGraph.update(a);
+  combinedGraph.update(a);
 }
 
 slider.addEventListener('input',e=>updateAll(+e.target.value,true));
-sinCheck.addEventListener('change',()=>sinCard.style.display=sinCheck.checked?'block':'none');
-cosCheck.addEventListener('change',()=>cosCard.style.display=cosCheck.checked?'block':'none');
+sinCheck.addEventListener('change',()=>combinedGraph.rebuild());
+cosCheck.addEventListener('change',()=>combinedGraph.rebuild());
 resetBtn.addEventListener('click',()=>{
   visited=new Set([0]);
   previousAngle=0;
   dragRawAngle=null;
   dragContinuousAngle=0;
   updateAll(0,false);
-  sinGraph.rebuild();
-  cosGraph.rebuild();
+  combinedGraph.rebuild();
 
   tanVisited=new Set([0]);
   tanPreviousAngle=0;
@@ -766,7 +1595,7 @@ function buildTanGraph(){
   const svg=document.getElementById('tanGraph');
   const NS='http://www.w3.org/2000/svg';
   const x0=62,x1=798,y0=34,y1=295,xmin=-360,xmax=360;
-  const yLimit=5;
+  const yLimit=10;
   const xMap=a=>x0+(a-xmin)/(xmax-xmin)*(x1-x0);
   const yMap=v=>(y0+y1)/2-(v/yLimit)*((y1-y0)/2-14);
 
@@ -776,11 +1605,17 @@ function buildTanGraph(){
     return e;
   }
 
+  // Vertical grid every 90 degrees
   for(let a=-360;a<=360;a+=90){
     const x=xMap(a);
-    svg.appendChild(E('line',{x1:x,y1:y0,x2:x,y2:y1,stroke:'#e5e7eb','stroke-width':1}));
+    svg.appendChild(E('line',{
+      x1:x,y1:y0,x2:x,y2:y1,
+      stroke:'#e5e7eb','stroke-width':1
+    }));
   }
-  [-5,-2.5,0,2.5,5].forEach(v=>{
+
+  // Horizontal grid at -10, -5, 0, 5, 10
+  [-10,-5,0,5,10].forEach(v=>{
     const y=yMap(v);
     svg.appendChild(E('line',{
       x1:x0,y1:y,x2:x1,y2:y,
@@ -791,9 +1626,12 @@ function buildTanGraph(){
 
   // y-axis at 0 degrees
   const yAxisX=xMap(0);
-  svg.appendChild(E('line',{x1:yAxisX,y1:y0,x2:yAxisX,y2:y1,stroke:'#111827','stroke-width':2.5}));
+  svg.appendChild(E('line',{
+    x1:yAxisX,y1:y0,x2:yAxisX,y2:y1,
+    stroke:'#111827','stroke-width':2.8
+  }));
 
-  // tangent asymptotes
+  // Vertical asymptotes
   [-270,-90,90,270].forEach(a=>{
     const x=xMap(a);
     svg.appendChild(E('line',{
@@ -802,37 +1640,49 @@ function buildTanGraph(){
     }));
   });
 
+  // Copy the main sin/cos graph's x-axis label style and positioning
   [-360,-270,-180,-90,0,90,180,270,360].forEach(a=>{
     const t=E('text',{
-      x:xMap(a),y:y1+25,'text-anchor':'middle','font-size':13,'font-weight':700,
+      x:xMap(a),
+      y:yMap(0)+31,
+      'text-anchor':'middle',
+      'font-size':20,
+      'font-weight':700,
       fill:a<0?'#e11d48':'#16a34a'
     });
     t.textContent=a+'°';
     svg.appendChild(t);
   });
 
-  [-5,0,5].forEach(v=>{
-    const t=E('text',{x:x0-12,y:yMap(v)+5,'text-anchor':'end','font-size':14});
+  // Match the main graph's y-label sizing
+  [-10,0,10].forEach(v=>{
+    const t=E('text',{
+      x:x0-18,
+      y:yMap(v)+7,
+      'text-anchor':'end',
+      'font-size':22,
+      'font-weight':600
+    });
     t.textContent=v;
     svg.appendChild(t);
   });
 
-  const theta=E('text',{
-    x:(x0+x1)/2,y:348,'text-anchor':'middle','font-size':18,
-    'font-family':'Cambria Math','font-style':'italic'
-  });
-  theta.textContent='θ (degrees)';
-  svg.appendChild(theta);
-
   const path=E('path',{
-    fill:'none',stroke:'#7c3aed','stroke-width':3.1,
-    'stroke-linecap':'round','stroke-linejoin':'round'
+    fill:'none',
+    stroke:'#7c3aed',
+    'stroke-width':3.1,
+    'stroke-linecap':'round',
+    'stroke-linejoin':'round'
   });
   svg.appendChild(path);
 
-  const dot=E('circle',{r:6.5,fill:'#7c3aed',stroke:'#111827','stroke-width':1.1});
+  const dot=E('circle',{
+    r:6.5,
+    fill:'#7c3aed',
+    stroke:'#111827',
+    'stroke-width':1.1
+  });
   svg.appendChild(dot);
-
 
   function rebuild(){
     const arr=[...tanVisited].sort((a,b)=>a-b);
@@ -843,7 +1693,7 @@ function buildTanGraph(){
       const c=Math.cos(rad);
       const val=Math.tan(rad);
 
-      // Break at undefined values, very steep values, or across asymptotes.
+      // Break at undefined values, outside the visible scale, or across asymptotes.
       const invalid=Math.abs(c)<0.025 || !Number.isFinite(val) || Math.abs(val)>yLimit;
       if(invalid){
         prev=null;
@@ -852,7 +1702,7 @@ function buildTanGraph(){
       }
 
       const x=xMap(a),y=yMap(val);
-      const crossesAsymptote = prev!==null && Math.abs(val-prevVal)>3.5;
+      const crossesAsymptote = prev!==null && Math.abs(val-prevVal)>6;
 
       if(prev===null || a-prev>1 || crossesAsymptote) d+=` M ${x} ${y}`;
       else d+=` L ${x} ${y}`;
@@ -867,6 +1717,7 @@ function buildTanGraph(){
   return{
     update(a){
       rebuild();
+
       const rad=a*Math.PI/180;
       const c=Math.cos(rad);
       const val=Math.tan(rad);
@@ -895,6 +1746,23 @@ function addTanVisited(from,to){
   }
 }
 
+function fitTanCalculation(){
+  if(!tanCalculation) return;
+
+  // If the expandable section is closed, width can be zero.
+  if(tanCalculation.clientWidth<=0) return;
+
+  let size=34;
+  const minSize=18;
+  tanCalculation.style.fontSize=size+'px';
+  tanCalculation.style.whiteSpace='nowrap';
+
+  while(tanCalculation.scrollWidth>tanCalculation.clientWidth && size>minSize){
+    size-=1;
+    tanCalculation.style.fontSize=size+'px';
+  }
+}
+
 function updateTan(a,trace=true){
   a=Math.max(-360,Math.min(360,Math.round(a)));
   if(trace) addTanVisited(tanPreviousAngle,a);
@@ -904,6 +1772,7 @@ function updateTan(a,trace=true){
 
   const rad=a*Math.PI/180;
   let s=Math.sin(rad), c=Math.cos(rad);
+
   if(Math.abs(s)<0.0005) s=0;
   if(Math.abs(c)<0.0005) c=0;
 
@@ -916,19 +1785,37 @@ function updateTan(a,trace=true){
       `<span class="frac"><span class="top">sin(${a}°)</span><span class="bottom">cos(${a}°)</span></span>` +
       ` = <span class="frac"><span class="top">${ss}</span><span class="bottom">0</span></span>` +
       ` = undefined`;
+
+    tanAsymptoteNote.innerHTML =
+      `cos(${a}°) = 0, so tan(${a}°) is undefined. ` +
+      `This creates a vertical asymptote on the graph.`;
+    tanAsymptoteNote.classList.add('show');
   }else{
     const t=trigDisplay(s/c);
+
     tanCalculation.innerHTML =
       `tan(${a}°) = ` +
       `<span class="frac"><span class="top">sin(${a}°)</span><span class="bottom">cos(${a}°)</span></span>` +
       ` = <span class="frac"><span class="top">${ss}</span><span class="bottom">${cc}</span></span>` +
       ` = ${t}`;
+
+    tanAsymptoteNote.innerHTML='';
+    tanAsymptoteNote.classList.remove('show');
   }
 
   tanGraph.update(a);
+  requestAnimationFrame(fitTanCalculation);
 }
 
 tanSlider.addEventListener('input',e=>updateTan(+e.target.value,true));
+
+const tanSection=document.querySelector('details.tanSection');
+if(tanSection){
+  tanSection.addEventListener('toggle',()=>{
+    if(tanSection.open) requestAnimationFrame(fitTanCalculation);
+  });
+}
+window.addEventListener('resize',()=>requestAnimationFrame(fitTanCalculation));
 
 window.addEventListener('load',()=>{
   visited=new Set([0]);
@@ -940,4 +1827,3 @@ window.addEventListener('load',()=>{
 });
 </script>
 </body>
-</html>
