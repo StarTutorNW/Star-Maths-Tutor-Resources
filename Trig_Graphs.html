@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit Circle → Sine and Cosine Graphs</title>
+<style>
+:root{
+  --ink:#111827; --muted:#667085; --line:#d8deea; --card:#fff;
+  --neg:#e11d48; --mid:#16a34a; --pos:#2563eb;
+  --sin:#ef4444; --cos:#2563eb; --angle:#55c5ee;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  color:var(--ink);
+  background:linear-gradient(180deg,#fff 0%,#f7f8fc 100%);
+}
+.page{max-width:1500px;margin:0 auto;padding:20px}
+h1{
+  margin:0;
+  color:#101766;
+  font-size:clamp(30px,3vw,46px);
+  letter-spacing:-.03em;
+  line-height:1.08;
+}
+.titleRow{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin:0 0 14px;
+}
+.titleLogo{
+  width:112px;
+  height:auto;
+  flex:0 0 auto;
+  display:block;
+}
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:14px;
+  box-shadow:0 5px 18px rgba(16,24,40,.05);
+}
+
+/* Collapsible explainer */
+details.explainer{margin-bottom:16px;overflow:hidden}
+details.explainer summary{
+  list-style:none;
+  cursor:pointer;
+  padding:14px 18px;
+  font-size:20px;
+  font-weight:800;
+  color:#5b21b6;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  user-select:none;
+}
+details.explainer summary::-webkit-details-marker{display:none}
+details.explainer summary::after{
+  content:"＋";
+  font-size:25px;
+  color:#5b21b6;
+}
+details.explainer[open] summary::after{content:"−"}
+.explainInner{
+  border-top:1px solid var(--line);
+  padding:16px 18px 18px;
+}
+.explainIntro{
+  margin:0 0 14px;
+  font-size:17px;
+  line-height:1.5;
+}
+.explainGrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.explainBox{
+  border:1px solid #efb8c2;
+  border-radius:12px;
+  padding:14px;
+  background:#fffafa;
+}
+.explainBox.blue{border-color:#b8cef8;background:#fbfdff}
+.explainBox h3{margin:0 0 8px;font-size:20px}
+.explainBox.red h3{color:#dc2626}.explainBox.blue h3{color:#1d4ed8}
+.explainBox p,.explainBox li{font-size:15px;line-height:1.5}
+.explainBox ul{margin:6px 0 8px 18px;padding:0}
+.eq,.math{
+  font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;
+  font-style:italic;
+}
+.eq{font-size:22px;text-align:center;margin:7px 0}
+.frac{
+  display:inline-flex;flex-direction:column;vertical-align:middle;text-align:center;
+  line-height:1.02;margin:0 .15em;font-style:normal;
+}
+.frac .top{border-bottom:1.5px solid currentColor;padding:0 .2em .08em}
+.frac .bottom{padding:.08em .2em 0}
+
+/* Main workspace */
+.workspace{
+  display:grid;
+  grid-template-columns:minmax(520px,.95fr) minmax(650px,1.2fr);
+  gap:18px;
+  align-items:start;
+}
+.leftWork{display:flex;flex-direction:column;gap:14px}
+.controls{padding:14px 18px}
+.controlTop{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.controlTop strong{font-size:22px}
+#angleReadout{
+  font-family:"Cambria Math","Times New Roman",serif;
+  font-size:34px;font-weight:800;
+}
+.sliderArea{padding:8px 6px 0}
+.tickRow{position:relative;height:30px;margin:0 8px}
+.tick{
+  position:absolute;transform:translateX(-50%);top:0;
+  font-size:13px;font-weight:700;white-space:nowrap;
+}
+.tick::after{
+  content:"";display:block;width:1px;height:9px;background:#111827;margin:3px auto 0;
+}
+input[type=range]{width:100%;accent-color:#111827}
+.caption{text-align:center;color:#475467;margin:8px 0 12px}
+.plotOptions{border-top:1px solid var(--line);padding-top:11px}
+.plotOptions strong{display:block;margin-bottom:8px}
+.checks{display:flex;gap:24px;flex-wrap:wrap}
+.checks label{display:flex;align-items:center;gap:8px;font-size:17px;font-weight:650}
+.checks input{width:20px;height:20px}
+.resetBtn{
+  border:1px solid #cfd6e3;
+  background:#fff;
+  color:#111827;
+  border-radius:9px;
+  padding:8px 13px;
+  font-size:15px;
+  font-weight:800;
+  cursor:pointer;
+}
+.resetBtn:hover{background:#f8fafc}
+.circleCard{padding:8px}
+#circleSvg{display:block;width:100%;height:auto}
+
+.graphs{display:flex;flex-direction:column;gap:16px}
+.graphCard{padding:8px 12px 12px}
+.graphTitle{
+  text-align:center;
+  font-family:"Cambria Math","Times New Roman",serif;
+  font-size:28px;
+  margin:4px 0 -2px;
+}
+.graphTitle.sin{color:var(--cos)} .graphTitle.cos{color:var(--sin)}
+.graphSvg{display:block;width:100%;height:auto}
+
+
+.tanSection{
+  margin-top:18px;
+  overflow:hidden;
+}
+.tanSection summary{
+  list-style:none;
+  cursor:pointer;
+  padding:14px 18px;
+  font-size:20px;
+  font-weight:800;
+  color:#7c3aed;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  user-select:none;
+}
+.tanSection summary::-webkit-details-marker{display:none}
+.tanSection summary::after{
+  content:"＋";
+  font-size:25px;
+}
+.tanSection[open] summary::after{content:"−"}
+.tanInner{
+  border-top:1px solid var(--line);
+  padding:16px 18px 18px;
+}
+.tanIntro{
+  font-size:17px;
+  line-height:1.5;
+  margin:0 0 12px;
+}
+.tanLayout{
+  display:grid;
+  grid-template-columns:minmax(360px,.7fr) minmax(620px,1.3fr);
+  gap:18px;
+  align-items:start;
+}
+.tanControls{
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:14px 16px;
+  background:#fbfcff;
+}
+.tanCalc{
+  margin:15px 0 8px;
+  text-align:center;
+  font-family:"Cambria Math","STIX Two Math","Times New Roman",serif;
+  font-size:25px;
+  line-height:1.55;
+  font-style:italic;
+  white-space:nowrap;
+  overflow-x:auto;
+  padding-bottom:4px;
+}
+.tanNote{
+  margin:12px 0 0;
+  padding:10px 12px;
+  background:#f5f3ff;
+  border-left:4px solid #7c3aed;
+  border-radius:8px;
+  line-height:1.45;
+}
+.tanGraphCard{
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:8px 12px 12px;
+  background:#fff;
+}
+.tanGraphTitle{
+  text-align:center;
+  font-family:"Cambria Math","Times New Roman",serif;
+  font-size:28px;
+  color:#7c3aed;
+  margin:4px 0 -2px;
+}
+#tanGraph{display:block;width:100%;height:auto}
+@media(max-width:1050px){
+  .tanLayout{grid-template-columns:1fr}
+}
+
+@media(max-width:1050px){
+  .workspace{grid-template-columns:1fr}
+  .explainGrid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="titleRow">
+  <img class="titleLogo" src="data:image/png;base64,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" alt="Star Academies logo">
+  <h1>Building the Trigonometric Graphs from the Unit Circle</h1>
+</div>
+
+  <details class="card explainer">
+    <summary>How does the unit circle work?</summary>
+    <div class="explainInner">
+      <p class="explainIntro">
+        A unit circle has radius <strong>1</strong>, so the hypotenuse of the right-angled triangle is always <strong>1</strong>.
+        The horizontal side is the point's <span class="math">x</span>-coordinate and the vertical side is its <span class="math">y</span>-coordinate.
+      </p>
+
+      <div class="explainGrid">
+        <div class="explainBox red">
+          <h3>Why <span class="math">x = cos(θ)</span></h3>
+          <ul>
+            <li>Adjacent side = <span class="math">x</span>-coordinate</li>
+            <li>Hypotenuse = 1</li>
+          </ul>
+          <div class="eq">
+            cos(θ) =
+            <span class="frac"><span class="top">adjacent</span><span class="bottom">hypotenuse</span></span>
+          </div>
+          <div class="eq">
+            cos(θ) =
+            <span class="frac"><span class="top">x</span><span class="bottom">1</span></span>
+            = x
+          </div>
+          <p>So the <span class="math">x</span>-coordinate of the moving point is <span class="math">cos(θ)</span>.</p>
+        </div>
+
+        <div class="explainBox blue">
+          <h3>Why <span class="math">y = sin(θ)</span></h3>
+          <ul>
+            <li>Opposite side = <span class="math">y</span>-coordinate</li>
+            <li>Hypotenuse = 1</li>
+          </ul>
+          <div class="eq">
+            sin(θ) =
+            <span class="frac"><span class="top">opposite</span><span class="bottom">hypotenuse</span></span>
+          </div>
+          <div class="eq">
+            sin(θ) =
+            <span class="frac"><span class="top">y</span><span class="bottom">1</span></span>
+            = y
+          </div>
+          <p>So the <span class="math">y</span>-coordinate of the moving point is <span class="math">sin(θ)</span>.</p>
+        </div>
+      </div>
+    </div>
+  </details>
+
+  <div class="workspace">
+    <div class="leftWork">
+      <section class="card controls">
+        <div class="controlTop">
+          <strong>Angle <span class="math">(θ)</span></strong>
+          <div id="angleReadout">0°</div>
+        </div>
+
+        <div class="sliderArea">
+          <div class="tickRow" aria-hidden="true">
+            <span class="tick" style="left:0%">−360°</span>
+            <span class="tick" style="left:16.6667%">−180°</span>
+            <span class="tick" style="left:33.3333%">0°</span>
+            <span class="tick" style="left:50%">180°</span>
+            <span class="tick" style="left:66.6667%">360°</span>
+            <span class="tick" style="left:83.3333%">540°</span>
+            <span class="tick" style="left:100%">720°</span>
+          </div>
+          <input id="angleSlider" type="range" min="-360" max="720" step="1" value="0">
+        </div>
+
+        <div class="caption">Drag the slider or the point on the circle</div>
+
+        <div class="plotOptions">
+          <strong>Show on graph:</strong>
+          <div class="checks">
+            <label><input id="sinCheck" type="checkbox" checked style="accent-color:#2563eb"> Plot <span class="math">sin(θ)</span></label>
+            <label><input id="cosCheck" type="checkbox" checked style="accent-color:#ef4444"> Plot <span class="math">cos(θ)</span></label>
+            <button id="resetBtn" class="resetBtn" type="button">Reset</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="card circleCard">
+        <svg id="circleSvg" viewBox="0 0 650 650">
+          <defs>
+            <marker id="arrow" markerWidth="8" markerHeight="8" refX="6.6" refY="4" orient="auto">
+              <polygon points="0,0 8,4 0,8" fill="#111827"/>
+            </marker>
+          </defs>
+
+          <circle cx="325" cy="325" r="210" fill="#fff" stroke="#111827" stroke-width="3"/>
+
+          <!-- full visible axes -->
+          <line x1="55" y1="325" x2="605" y2="325" stroke="#111827" stroke-width="3" marker-end="url(#arrow)"/>
+          <line x1="325" y1="595" x2="325" y2="55" stroke="#111827" stroke-width="3" marker-end="url(#arrow)"/>
+
+          <text x="611" y="337" font-size="28" font-family="Cambria Math" font-style="italic">x</text>
+          <text x="337" y="49" font-size="28" font-family="Cambria Math" font-style="italic">y</text>
+          <text x="550" y="352" font-size="24">1</text>
+          <text x="64" y="352" font-size="24">−1</text>
+          <text x="338" y="119" font-size="24">1</text>
+          <text x="338" y="568" font-size="24">−1</text>
+
+          <!-- angle region at origin -->
+          <path id="angleFill" d="" fill="#55c5ee" fill-opacity=".72" stroke="#111827" stroke-width="2"/>
+          <path id="extraAngleFill" d="" fill="#55c5ee" fill-opacity=".35" stroke="none"/>
+          <text id="angleText" x="0" y="0" font-size="28" font-family="Cambria Math"></text>
+
+          <!-- triangle -->
+          <line id="xSide" x1="325" y1="325" x2="535" y2="325" stroke="#ef4444" stroke-width="5"/>
+          <line id="ySide" x1="535" y1="325" x2="535" y2="325" stroke="#1d4ed8" stroke-width="5"/>
+          <line id="radiusLine" x1="325" y1="325" x2="535" y2="325" stroke="#111827" stroke-width="5"/>
+          <path id="rightAngle" d="" fill="none" stroke="#111827" stroke-width="2.8"/>
+
+          <circle id="dragPoint" cx="535" cy="325" r="14" fill="#a7f3f0" stroke="#111827" stroke-width="4" style="cursor:grab"/>
+          <circle cx="325" cy="325" r="5" fill="#111827"/>
+
+          <text id="coordLabel" x="548" y="305" font-size="21" font-weight="700"></text>
+          <text id="hypLabel" x="425" y="300" font-size="23">1</text>
+        </svg>
+      </section>
+
+      
+    </div>
+
+    <div class="graphs">
+      <section class="card graphCard" id="sinCard">
+        <div class="graphTitle sin">y = sin(θ)</div>
+        <svg id="sinGraph" class="graphSvg" viewBox="0 0 720 330"></svg>
+      </section>
+
+      <section class="card graphCard" id="cosCard">
+        <div class="graphTitle cos">y = cos(θ)</div>
+        <svg id="cosGraph" class="graphSvg" viewBox="0 0 720 330"></svg>
+      </section>
+    </div>
+
+  </div>
+
+  <details class="card tanSection">
+    <summary>What about the graph of tan(θ)?</summary>
+    <div class="tanInner">
+      <p class="tanIntro">
+        Tangent can be found from sine and cosine:
+        <span class="math">tan(θ) = sin(θ) / cos(θ)</span>.
+        On the unit circle, <span class="math">tan(θ)</span> is also the
+        <strong>gradient of the hypotenuse</strong> (the line from the origin to the point on the circle).
+      </p>
+
+      <div class="tanLayout">
+        <div class="tanControls">
+          <div class="controlTop">
+            <strong>Angle <span class="math">(θ)</span></strong>
+            <div id="tanAngleReadout" style="font-family:'Cambria Math','Times New Roman',serif;font-size:32px;font-weight:800;color:#7c3aed">0°</div>
+          </div>
+
+          <div class="sliderArea">
+            <div class="tickRow" aria-hidden="true">
+              <span class="tick" style="left:0%">−360°</span>
+              <span class="tick" style="left:12.5%">−270°</span>
+              <span class="tick" style="left:25%">−180°</span>
+              <span class="tick" style="left:37.5%">−90°</span>
+              <span class="tick" style="left:50%">0°</span>
+              <span class="tick" style="left:62.5%">90°</span>
+              <span class="tick" style="left:75%">180°</span>
+              <span class="tick" style="left:87.5%">270°</span>
+              <span class="tick" style="left:100%">360°</span>
+            </div>
+            <input id="tanSlider" type="range" min="-360" max="360" step="1" value="0">
+          </div>
+
+          <div class="tanCalc" id="tanCalculation">
+            tan(0°) =
+            <span class="frac"><span class="top">sin(0°)</span><span class="bottom">cos(0°)</span></span>
+            =
+            <span class="frac"><span class="top">0</span><span class="bottom">1</span></span>
+            = 0
+          </div>
+
+          <div class="tanNote">
+            When <span class="math">cos(θ) = 0</span>, the division is undefined.
+            This happens at 90° + 180°n, which creates the vertical asymptotes in the tangent graph.
+          </div>
+        </div>
+
+        <div class="tanGraphCard">
+          <div class="tanGraphTitle">y = tan(θ)</div>
+          <svg id="tanGraph" viewBox="0 0 820 360"></svg>
+        </div>
+      </div>
+    </div>
+  </details>
+</div>
+
+<script>
+const slider=document.getElementById('angleSlider');
+const angleReadout=document.getElementById('angleReadout');
+const sinCheck=document.getElementById('sinCheck');
+const cosCheck=document.getElementById('cosCheck');
+const sinCard=document.getElementById('sinCard');
+const cosCard=document.getElementById('cosCard');
+const resetBtn=document.getElementById('resetBtn');
+const tanSlider=document.getElementById('tanSlider');
+const tanAngleReadout=document.getElementById('tanAngleReadout');
+const tanCalculation=document.getElementById('tanCalculation');
+
+const circleSvg=document.getElementById('circleSvg');
+const dragPoint=document.getElementById('dragPoint');
+const radiusLine=document.getElementById('radiusLine');
+const xSide=document.getElementById('xSide');
+const ySide=document.getElementById('ySide');
+const rightAngle=document.getElementById('rightAngle');
+const angleFill=document.getElementById('angleFill');
+const extraAngleFill=document.getElementById('extraAngleFill');
+const angleText=document.getElementById('angleText');
+const coordLabel=document.getElementById('coordLabel');
+const hypLabel=document.getElementById('hypLabel');
+
+
+const C={x:325,y:325},R=210,AR=48;
+let angle=0,dragging=false;
+let dragRawAngle=null;
+let dragContinuousAngle=0;
+let visited=new Set([0]);
+
+function rangeColor(a){
+  if(a<0)return'#e11d48';
+  if(a<=360)return'#16a34a';
+  return'#2563eb';
+}
+function fmt(v){
+  if(Math.abs(v)<0.0005)v=0;
+  return String(Math.round(v*1000)/1000);
+}
+function pointFor(a){
+  const r=a*Math.PI/180;
+  return{x:C.x+R*Math.cos(r),y:C.y-R*Math.sin(r),cos:Math.cos(r),sin:Math.sin(r)};
+}
+function polar(a,r){
+  const t=a*Math.PI/180;
+  return{x:C.x+r*Math.cos(t),y:C.y-r*Math.sin(t)};
+}
+function svgPoint(evt){
+  const pt=circleSvg.createSVGPoint();
+  pt.x=evt.clientX;pt.y=evt.clientY;
+  return pt.matrixTransform(circleSvg.getScreenCTM().inverse());
+}
+function nearestEquivalent(raw,current){
+  const c=[];
+  for(let k=-2;k<=3;k++)c.push(raw+360*k);
+  return c.filter(v=>v>=-360&&v<=720)
+          .sort((a,b)=>Math.abs(a-current)-Math.abs(b-current))[0];
+}
+
+/* Directed angle sector like the reference images:
+   start on +x axis and sweep in the sign of theta.
+   For >360, a full translucent disc shows the completed revolution
+   plus the remainder sector. */
+function sectorPath(deg,r=AR){
+  if(deg===0)return'';
+  let d=deg;
+  if(Math.abs(d)>=360)d = d>0 ? d%360 : -((-d)%360);
+  if(d===0)return'';
+  const s=polar(0,r), e=polar(d,r);
+  const large=Math.abs(d)>180?1:0;
+  const sweep=d>0?0:1;
+  return`M ${C.x} ${C.y} L ${s.x} ${s.y} A ${r} ${r} 0 ${large} ${sweep} ${e.x} ${e.y} Z`;
+}
+function fullDiscPath(r=AR){
+  return`M ${C.x-r} ${C.y} A ${r} ${r} 0 1 0 ${C.x+r} ${C.y} A ${r} ${r} 0 1 0 ${C.x-r} ${C.y} Z`;
+}
+function angleLabelPosition(a){
+  let d=a;
+  if(Math.abs(d)>=360){
+    d = d>0 ? d%360 : -((-d)%360);
+    if(d===0)d=0;
+  }
+  let mid=d/2;
+  if(Math.abs(d)>180){
+    mid=d>0 ? d/2 : d/2;
+  }
+  const rr=Math.abs(d)>150?78:82;
+  const p=polar(mid,rr);
+  return{x:p.x,y:p.y};
+}
+
+function updateCircle(a){
+  const p=pointFor(a);
+
+  dragPoint.setAttribute('cx',p.x);
+  dragPoint.setAttribute('cy',p.y);
+  radiusLine.setAttribute('x2',p.x);
+  radiusLine.setAttribute('y2',p.y);
+
+  xSide.setAttribute('x1',C.x);xSide.setAttribute('y1',C.y);
+  xSide.setAttribute('x2',p.x);xSide.setAttribute('y2',C.y);
+
+  ySide.setAttribute('x1',p.x);ySide.setAttribute('y1',C.y);
+  ySide.setAttribute('x2',p.x);ySide.setAttribute('y2',p.y);
+
+  /* right angle: interior directions are
+     horizontal from foot toward origin, vertical from foot toward P */
+  const F={x:p.x,y:C.y};
+  const hx=(C.x-F.x)>=0?1:-1;
+  const vy=(p.y-F.y)>=0?1:-1;
+  const s=18;
+  const A={x:F.x+s*hx,y:F.y};
+  const B={x:F.x+s*hx,y:F.y+s*vy};
+  const D={x:F.x,y:F.y+s*vy};
+  rightAngle.setAttribute('d',`M ${A.x} ${A.y} L ${B.x} ${B.y} L ${D.x} ${D.y}`);
+
+  /* directed origin angle */
+  angleFill.setAttribute('d',sectorPath(a));
+  extraAngleFill.setAttribute('d',Math.abs(a)>=360?fullDiscPath():'');
+  angleFill.setAttribute('fill','#55c5ee');
+  extraAngleFill.setAttribute('fill','#55c5ee');
+
+  const al=angleLabelPosition(a);
+  angleText.setAttribute('x',Math.max(34,Math.min(560,al.x-24)));
+  angleText.setAttribute('y',Math.max(40,Math.min(610,al.y+9)));
+  angleText.setAttribute('fill','#111827');
+  angleText.textContent=a===0?'0°':`${a}°`;
+
+  coordLabel.setAttribute('x',Math.min(520,Math.max(35,p.x+18)));
+  coordLabel.setAttribute('y',Math.min(615,Math.max(30,p.y-18)));
+  coordLabel.textContent=`(${fmt(p.cos)}, ${fmt(p.sin)})`;
+
+  hypLabel.setAttribute('x',(C.x+p.x)/2+8);
+  hypLabel.setAttribute('y',(C.y+p.y)/2-8);
+
+}
+
+function buildGraph(svgId,fn,color){
+  const svg=document.getElementById(svgId),NS='http://www.w3.org/2000/svg';
+  const x0=60,x1=696,y0=32,y1=270,xmin=-360,xmax=720;
+  const xMap=a=>x0+(a-xmin)/(xmax-xmin)*(x1-x0);
+  const yMap=v=>(y0+y1)/2-v*((y1-y0)/2-20);
+  function E(n,a={}){
+    const e=document.createElementNS(NS,n);
+    Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));
+    return e;
+  }
+
+  for(let a=-360;a<=360;a+=90){
+    const x=xMap(a);
+    svg.appendChild(E('line',{x1:x,y1:y0,x2:x,y2:y1,stroke:'#e5e7eb'}));
+  }
+  [-1,-.5,0,.5,1].forEach(v=>{
+    const y=yMap(v);
+    svg.appendChild(E('line',{x1:x0,y1:y,x2:x1,y2:y,stroke:v===0?'#111827':'#e5e7eb','stroke-width':v===0?1.7:1}));
+  });
+
+  const axisX=xMap(0);
+  svg.appendChild(E('line',{x1:axisX,y1:y0,x2:axisX,y2:y1,stroke:'#111827','stroke-width':2.6}));
+
+  [-360,-180,0,180,360,540,720].forEach(a=>{
+    const t=E('text',{
+      x:xMap(a),y:y1+25,'text-anchor':'middle','font-size':14,'font-weight':700,
+      fill:a<0?'#e11d48':a<=360?'#16a34a':'#2563eb'
+    });
+    t.textContent=a+'°';svg.appendChild(t);
+  });
+  [-1,0,1].forEach(v=>{
+    const t=E('text',{x:x0-11,y:yMap(v)+5,'text-anchor':'end','font-size':14});
+    t.textContent=v;svg.appendChild(t);
+  });
+  const theta=E('text',{x:(x0+x1)/2,y:320,'text-anchor':'middle','font-size':18,'font-family':'Cambria Math','font-style':'italic'});
+  theta.textContent='θ (degrees)';svg.appendChild(theta);
+
+  const path=E('path',{fill:'none',stroke:color,'stroke-width':3.2,'stroke-linecap':'round','stroke-linejoin':'round'});
+  svg.appendChild(path);
+
+  const dot=E('circle',{r:6.5,fill:color,stroke:'#111827','stroke-width':1.2});
+  svg.appendChild(dot);
+  const guide=E('line',{stroke:'#111827','stroke-width':1.1,'stroke-dasharray':'5 5',opacity:.45});
+  svg.appendChild(guide);
+
+  function rebuild(){
+    const arr=[...visited].sort((a,b)=>a-b);
+    let d='',prev=null;
+    arr.forEach(a=>{
+      const x=xMap(a),y=yMap(fn(a*Math.PI/180));
+      if(prev===null || a-prev>1)d+=` M ${x} ${y}`;
+      else d+=` L ${x} ${y}`;
+      prev=a;
+    });
+    path.setAttribute('d',d.trim());
+  }
+  return{
+    update(a){
+      rebuild();
+      const x=xMap(a),y=yMap(fn(a*Math.PI/180));
+      dot.setAttribute('cx',x);dot.setAttribute('cy',y);
+      guide.setAttribute('x1',x);guide.setAttribute('x2',x);
+      guide.setAttribute('y1',y0);guide.setAttribute('y2',y1);
+    },
+    rebuild
+  };
+}
+
+const sinGraph=buildGraph('sinGraph',Math.sin,'#2563eb');
+const cosGraph=buildGraph('cosGraph',Math.cos,'#ef4444');
+
+function addVisited(from,to){
+  const lo=Math.min(Math.round(from),Math.round(to));
+  const hi=Math.max(Math.round(from),Math.round(to));
+  for(let i=lo;i<=hi;i++)if(i>=-360&&i<=720)visited.add(i);
+}
+let previousAngle=0;
+
+function updateAll(a,trace=true){
+  a=Math.max(-360,Math.min(720,Math.round(a)));
+  if(trace)addVisited(previousAngle,a);
+  previousAngle=a;
+  angle=a;
+  slider.value=a;
+  angleReadout.textContent=a+'°';
+  angleReadout.style.color=rangeColor(a);
+  updateCircle(a);
+  sinGraph.update(a);
+  cosGraph.update(a);
+}
+
+slider.addEventListener('input',e=>updateAll(+e.target.value,true));
+sinCheck.addEventListener('change',()=>sinCard.style.display=sinCheck.checked?'block':'none');
+cosCheck.addEventListener('change',()=>cosCard.style.display=cosCheck.checked?'block':'none');
+resetBtn.addEventListener('click',()=>{
+  visited=new Set([0]);
+  previousAngle=0;
+  dragRawAngle=null;
+  dragContinuousAngle=0;
+  updateAll(0,false);
+  sinGraph.rebuild();
+  cosGraph.rebuild();
+
+  tanVisited=new Set([0]);
+  tanPreviousAngle=0;
+  updateTan(0,false);
+  tanGraph.rebuild();
+});
+
+dragPoint.addEventListener('pointerdown',e=>{
+  dragging=true;
+  dragPoint.setPointerCapture(e.pointerId);
+  dragPoint.style.cursor='grabbing';
+
+  // Start from the point's actual screen angle, but keep the current
+  // continuous angle (which may be on a second/third revolution).
+  const p=svgPoint(e);
+  dragRawAngle=Math.atan2(-(p.y-C.y),p.x-C.x)*180/Math.PI;
+  dragContinuousAngle=angle;
+});
+
+dragPoint.addEventListener('pointerup',e=>{
+  dragging=false;
+  dragRawAngle=null;
+  dragPoint.style.cursor='grab';
+  try{dragPoint.releasePointerCapture(e.pointerId)}catch(_){}
+});
+
+dragPoint.addEventListener('pointercancel',()=>{
+  dragging=false;
+  dragRawAngle=null;
+  dragPoint.style.cursor='grab';
+});
+
+circleSvg.addEventListener('pointermove',e=>{
+  if(!dragging)return;
+
+  const p=svgPoint(e);
+  const raw=Math.atan2(-(p.y-C.y),p.x-C.x)*180/Math.PI;
+
+  if(dragRawAngle===null){
+    dragRawAngle=raw;
+    dragContinuousAngle=angle;
+    return;
+  }
+
+  // Find the small signed change around the circle, correctly crossing
+  // the -180° / 180° seam.
+  let delta=raw-dragRawAngle;
+  if(delta>180) delta-=360;
+  if(delta<-180) delta+=360;
+
+  dragContinuousAngle += delta;
+  dragRawAngle = raw;
+
+  // Hard stops:
+  // at 720° further positive movement does nothing, but reversing works;
+  // at -360° further negative movement does nothing, but reversing works.
+  if(dragContinuousAngle>720) dragContinuousAngle=720;
+  if(dragContinuousAngle<-360) dragContinuousAngle=-360;
+
+  updateAll(dragContinuousAngle,true);
+});
+
+circleSvg.addEventListener('pointerdown',e=>{
+  if(e.target===dragPoint)return;
+  const p=svgPoint(e),d=Math.hypot(p.x-C.x,p.y-C.y);
+  if(Math.abs(d-R)>38)return;
+  const raw=Math.atan2(-(p.y-C.y),p.x-C.x)*180/Math.PI;
+  const best=nearestEquivalent(raw,angle);
+  if(best!==undefined)updateAll(best,true);
+});
+
+
+/* ---------------- Tangent section ---------------- */
+let tanVisited=new Set([0]);
+let tanPreviousAngle=0;
+
+function trigDisplay(v){
+  if(Math.abs(v)<0.0005) v=0;
+  return String(Math.round(v*1000)/1000);
+}
+
+function buildTanGraph(){
+  const svg=document.getElementById('tanGraph');
+  const NS='http://www.w3.org/2000/svg';
+  const x0=62,x1=798,y0=34,y1=295,xmin=-360,xmax=360;
+  const yLimit=5;
+  const xMap=a=>x0+(a-xmin)/(xmax-xmin)*(x1-x0);
+  const yMap=v=>(y0+y1)/2-(v/yLimit)*((y1-y0)/2-14);
+
+  function E(name,attrs={}){
+    const e=document.createElementNS(NS,name);
+    Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));
+    return e;
+  }
+
+  for(let a=-360;a<=360;a+=90){
+    const x=xMap(a);
+    svg.appendChild(E('line',{x1:x,y1:y0,x2:x,y2:y1,stroke:'#e5e7eb','stroke-width':1}));
+  }
+  [-5,-2.5,0,2.5,5].forEach(v=>{
+    const y=yMap(v);
+    svg.appendChild(E('line',{
+      x1:x0,y1:y,x2:x1,y2:y,
+      stroke:v===0?'#111827':'#e5e7eb',
+      'stroke-width':v===0?1.8:1
+    }));
+  });
+
+  // y-axis at 0 degrees
+  const yAxisX=xMap(0);
+  svg.appendChild(E('line',{x1:yAxisX,y1:y0,x2:yAxisX,y2:y1,stroke:'#111827','stroke-width':2.5}));
+
+  // tangent asymptotes
+  [-270,-90,90,270].forEach(a=>{
+    const x=xMap(a);
+    svg.appendChild(E('line',{
+      x1:x,y1:y0,x2:x,y2:y1,
+      stroke:'#9ca3af','stroke-width':1.5,'stroke-dasharray':'7 6'
+    }));
+  });
+
+  [-360,-270,-180,-90,0,90,180,270,360].forEach(a=>{
+    const t=E('text',{
+      x:xMap(a),y:y1+25,'text-anchor':'middle','font-size':13,'font-weight':700,
+      fill:a<0?'#e11d48':'#16a34a'
+    });
+    t.textContent=a+'°';
+    svg.appendChild(t);
+  });
+
+  [-5,0,5].forEach(v=>{
+    const t=E('text',{x:x0-12,y:yMap(v)+5,'text-anchor':'end','font-size':14});
+    t.textContent=v;
+    svg.appendChild(t);
+  });
+
+  const theta=E('text',{
+    x:(x0+x1)/2,y:348,'text-anchor':'middle','font-size':18,
+    'font-family':'Cambria Math','font-style':'italic'
+  });
+  theta.textContent='θ (degrees)';
+  svg.appendChild(theta);
+
+  const path=E('path',{
+    fill:'none',stroke:'#7c3aed','stroke-width':3.1,
+    'stroke-linecap':'round','stroke-linejoin':'round'
+  });
+  svg.appendChild(path);
+
+  const dot=E('circle',{r:6.5,fill:'#7c3aed',stroke:'#111827','stroke-width':1.1});
+  svg.appendChild(dot);
+
+
+  function rebuild(){
+    const arr=[...tanVisited].sort((a,b)=>a-b);
+    let d='', prev=null, prevVal=null;
+
+    arr.forEach(a=>{
+      const rad=a*Math.PI/180;
+      const c=Math.cos(rad);
+      const val=Math.tan(rad);
+
+      // Break at undefined values, very steep values, or across asymptotes.
+      const invalid=Math.abs(c)<0.025 || !Number.isFinite(val) || Math.abs(val)>yLimit;
+      if(invalid){
+        prev=null;
+        prevVal=null;
+        return;
+      }
+
+      const x=xMap(a),y=yMap(val);
+      const crossesAsymptote = prev!==null && Math.abs(val-prevVal)>3.5;
+
+      if(prev===null || a-prev>1 || crossesAsymptote) d+=` M ${x} ${y}`;
+      else d+=` L ${x} ${y}`;
+
+      prev=a;
+      prevVal=val;
+    });
+
+    path.setAttribute('d',d.trim());
+  }
+
+  return{
+    update(a){
+      rebuild();
+      const rad=a*Math.PI/180;
+      const c=Math.cos(rad);
+      const val=Math.tan(rad);
+      const undefinedHere=Math.abs(c)<0.0005;
+
+      if(undefinedHere || !Number.isFinite(val) || Math.abs(val)>yLimit){
+        dot.setAttribute('visibility','hidden');
+      }else{
+        const x=xMap(a),y=yMap(val);
+        dot.setAttribute('visibility','visible');
+        dot.setAttribute('cx',x);
+        dot.setAttribute('cy',y);
+      }
+    },
+    rebuild
+  };
+}
+
+const tanGraph=buildTanGraph();
+
+function addTanVisited(from,to){
+  const lo=Math.min(Math.round(from),Math.round(to));
+  const hi=Math.max(Math.round(from),Math.round(to));
+  for(let i=lo;i<=hi;i++){
+    if(i>=-360 && i<=360) tanVisited.add(i);
+  }
+}
+
+function updateTan(a,trace=true){
+  a=Math.max(-360,Math.min(360,Math.round(a)));
+  if(trace) addTanVisited(tanPreviousAngle,a);
+  tanPreviousAngle=a;
+  tanSlider.value=a;
+  tanAngleReadout.textContent=a+'°';
+
+  const rad=a*Math.PI/180;
+  let s=Math.sin(rad), c=Math.cos(rad);
+  if(Math.abs(s)<0.0005) s=0;
+  if(Math.abs(c)<0.0005) c=0;
+
+  const ss=trigDisplay(s);
+  const cc=trigDisplay(c);
+
+  if(c===0){
+    tanCalculation.innerHTML =
+      `tan(${a}°) = ` +
+      `<span class="frac"><span class="top">sin(${a}°)</span><span class="bottom">cos(${a}°)</span></span>` +
+      ` = <span class="frac"><span class="top">${ss}</span><span class="bottom">0</span></span>` +
+      ` = undefined`;
+  }else{
+    const t=trigDisplay(s/c);
+    tanCalculation.innerHTML =
+      `tan(${a}°) = ` +
+      `<span class="frac"><span class="top">sin(${a}°)</span><span class="bottom">cos(${a}°)</span></span>` +
+      ` = <span class="frac"><span class="top">${ss}</span><span class="bottom">${cc}</span></span>` +
+      ` = ${t}`;
+  }
+
+  tanGraph.update(a);
+}
+
+tanSlider.addEventListener('input',e=>updateTan(+e.target.value,true));
+
+window.addEventListener('load',()=>{
+  visited=new Set([0]);
+  previousAngle=0;
+  updateAll(0,false);
+  tanVisited=new Set([0]);
+  tanPreviousAngle=0;
+  updateTan(0,false);
+});
+</script>
+</body>
+</html>
