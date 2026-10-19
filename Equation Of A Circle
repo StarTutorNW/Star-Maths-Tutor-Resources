@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Equation of a Circle | Star Maths Tutor</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+      color: #111827;
+      background: linear-gradient(180deg, #ffffff 0%, #f7f8fc 100%);
+      min-height: 100vh;
+    }
+    main {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 14px 18px 18px;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    #logo {
+      display: none;
+      width: 98px;
+      height: auto;
+      flex: 0 0 auto;
+    }
+    h1 {
+      margin: 0;
+      color: #101766;
+      font-size: clamp(22px, 3.3vw, 34px);
+      letter-spacing: -0.03em;
+      line-height: 1.08;
+    }
+    .card {
+      background: #fff;
+      border: 1px solid #d8deea;
+      border-radius: 14px;
+      box-shadow: 0 5px 18px rgba(16, 24, 40, 0.05);
+      padding: clamp(12px, 2vw, 18px);
+    }
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(300px, 390px) minmax(0, 1fr);
+      gap: 14px 18px;
+      align-items: start;
+    }
+    .panel, .graph-wrap { min-width: 0; }
+    .control { margin: 0 0 10px; }
+    .control label {
+      font-size: 19px;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+    }
+    #radiusValue {
+      color: #EB088C;
+      font-variant-numeric: tabular-nums;
+    }
+    input[type="range"] {
+      display: block;
+      width: 100%;
+      accent-color: #EB088C;
+      cursor: pointer;
+      margin: 10px 0 4px;
+    }
+    .range-ends {
+      display: flex;
+      justify-content: space-between;
+      color: #667085;
+      font-size: 12px;
+    }
+    .triangle-toggle {
+      margin: 6px 0 12px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-size: 14px;
+      color: #344054;
+    }
+    .triangle-toggle input {
+      width: 16px;
+      height: 16px;
+      accent-color: #EB088C;
+      cursor: pointer;
+      flex: 0 0 auto;
+    }
+    .equation-block {
+      text-align: center;
+      margin: 8px 0 8px;
+      padding: 8px 8px 10px;
+      background: #fbfcff;
+      border: 1px solid #e5eaf3;
+      border-radius: 12px;
+    }
+    .equation {
+      font-family: "Cambria Math", "STIX Two Math", "Latin Modern Math", "Times New Roman", serif;
+      font-size: clamp(27px, 4vw, 38px);
+      font-style: normal;
+      line-height: 1.22;
+      white-space: nowrap;
+      color: #111111;
+    }
+    .equation.general {
+      font-size: clamp(24px, 3.2vw, 31px);
+      color: #EB088C;
+      margin-bottom: 4px;
+    }
+    .equation math {
+      font-family: "Cambria Math", "STIX Two Math", "Latin Modern Math", serif;
+      font-style: normal;
+    }
+    .hint {
+      text-align: center;
+      color: #667085;
+      font-size: 13px;
+      margin: 0 0 8px;
+    }
+    svg {
+      display: block;
+      width: min(100%, 500px);
+      height: auto;
+      margin: 0 auto;
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    .tick {
+      font: 11px Inter, system-ui, sans-serif;
+      fill: #4b5563;
+    }
+    .mathlabel {
+      font-family: "Cambria Math", "STIX Two Math", "Latin Modern Math", "Times New Roman", serif;
+      font-size: 18px;
+      font-style: normal;
+      font-weight: 500;
+    }
+    .drag-note {
+      text-align: center;
+      color: #667085;
+      font-size: 12px;
+      margin-top: 8px;
+      margin-bottom: 0;
+    }
+    @media (max-width: 880px) {
+      .workspace { grid-template-columns: 1fr; }
+      .panel { max-width: 640px; margin: 0 auto; }
+      svg { width: min(100%, 540px); }
+    }
+    @media (max-width: 480px) {
+      main { padding: 12px; }
+      header { gap: 9px; margin-bottom: 10px; }
+      #logo { width: 78px; }
+      h1 { font-size: clamp(20px, 7vw, 28px); }
+      .control label { font-size: 18px; }
+      .equation { font-size: clamp(22px, 7vw, 30px); }
+      .equation.general { font-size: clamp(20px, 6vw, 26px); }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <img id="logo" alt="Star Maths Tutor logo">
+      <h1>Equation of a Circle</h1>
+    </header>
+
+    <section class="card">
+      <div class="workspace">
+        <div class="panel">
+          <div class="control">
+            <label for="radius">Radius <span id="radiusValue">3</span></label>
+            <input id="radius" type="range" min="0.5" max="8" step="0.5" value="3">
+            <div class="range-ends"><span>0.5</span><span>8</span></div>
+          </div>
+
+          <label class="triangle-toggle" for="showTriangle">
+            <input id="showTriangle" type="checkbox">
+            <span>Show coordinate triangle</span>
+          </label>
+
+          <div class="equation-block" aria-live="polite">
+            <div class="equation general" id="generalEquation">
+              <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><msup><mi>y</mi><mn>2</mn></msup><mo>=</mo><msup><mn id="radiusInEquation">3</mn><mn>2</mn></msup></math>
+            </div>
+            <div class="equation" id="equation">
+              <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><msup><mi>y</mi><mn>2</mn></msup><mo>=</mo><mn id="squaredValue">9</mn></math>
+            </div>
+          </div>
+          
+          <p class="drag-note">The pink line is the radius. Tick or untick the box to show or hide the coordinate triangle.</p>
+        </div>
+
+        <div class="graph-wrap">
+          <svg id="graph" viewBox="0 0 500 500" role="img" aria-label="Circle centred at the origin with a draggable point and an optional coordinate triangle showing x and y coordinates">
+            <defs>
+              <clipPath id="plotClip"><rect x="38" y="38" width="424" height="424"></rect></clipPath>
+              <marker id="axisArrow" markerWidth="8" markerHeight="8" refX="6.8" refY="4" orient="auto" markerUnits="strokeWidth">
+                <path d="M 0 0 L 8 4 L 0 8 z" fill="#111827"></path>
+              </marker>
+            </defs>
+            <rect x="38" y="38" width="424" height="424" rx="8" fill="#fcfdff" stroke="#d8deea"></rect>
+            <g id="grid" clip-path="url(#plotClip)"></g>
+
+            <line x1="38" y1="250" x2="470" y2="250" stroke="#111827" stroke-width="1.9" marker-end="url(#axisArrow)"></line>
+            <line x1="250" y1="462" x2="250" y2="30" stroke="#111827" stroke-width="1.9" marker-end="url(#axisArrow)"></line>
+            <text x="476" y="244" class="mathlabel" text-anchor="start" fill="#111827">x</text>
+            <text x="256" y="24" class="mathlabel" text-anchor="start" fill="#111827">y</text>
+
+            <circle id="circle" cx="250" cy="250" r="70.5" fill="none" stroke="#111111" stroke-width="2.3"></circle>
+
+            <g id="triangleGroup">
+              <line id="baseLine" x1="250" y1="250" x2="179.5" y2="250" stroke="#1d4ed8" stroke-width="3" stroke-linecap="round"></line>
+              <line id="heightLine" x1="179.5" y1="250" x2="179.5" y2="196" stroke="#ef4444" stroke-width="3" stroke-linecap="round"></line>
+              <path id="rightAngle" d="M 179.5 250 L 179.5 234 L 195.5 234 L 195.5 250" fill="none" stroke="#111111" stroke-width="1.8"></path>
+              <text id="xLabel" class="mathlabel" x="214" y="272" text-anchor="middle" fill="#1d4ed8">x</text>
+              <text id="yLabel" class="mathlabel" x="168" y="223" text-anchor="middle" fill="#ef4444">y</text>
+            </g>
+
+            <line id="radiusLine" x1="250" y1="250" x2="179.5" y2="196" stroke="#EB088C" stroke-width="3.4" stroke-linecap="round"></line>
+
+            <circle cx="250" cy="250" r="4.5" fill="#ffffff" stroke="#111827" stroke-width="1.4"></circle>
+            <text x="258" y="269" font-size="13" fill="#111827">O</text>
+
+            <circle id="point" cx="179.5" cy="196" r="8" fill="#c9c9c9" stroke="#111111" stroke-width="2" style="cursor: grab"></circle>
+          </svg>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const svgNS = 'http://www.w3.org/2000/svg';
+    const centre = 250;
+    const unit = 23.5;
+    let angle = 2.4870941840919194;
+
+    const grid = document.getElementById('grid');
+    const radiusInput = document.getElementById('radius');
+    const showTriangleInput = document.getElementById('showTriangle');
+    const point = document.getElementById('point');
+    const circle = document.getElementById('circle');
+    const radiusValue = document.getElementById('radiusValue');
+    const radiusLine = document.getElementById('radiusLine');
+    const baseLine = document.getElementById('baseLine');
+    const heightLine = document.getElementById('heightLine');
+    const rightAngle = document.getElementById('rightAngle');
+    const xLabel = document.getElementById('xLabel');
+    const yLabel = document.getElementById('yLabel');
+    const triangleGroup = document.getElementById('triangleGroup');
+    const svg = document.getElementById('graph');
+
+    function addGrid() {
+      for (let i = -8; i <= 8; i++) {
+        if (i !== 0) {
+          const vertical = document.createElementNS(svgNS, 'line');
+          const x = centre + i * unit;
+          vertical.setAttribute('x1', x);
+          vertical.setAttribute('x2', x);
+          vertical.setAttribute('y1', 38);
+          vertical.setAttribute('y2', 462);
+          vertical.setAttribute('stroke', '#b8c0cc');
+          vertical.setAttribute('stroke-width', '1');
+          grid.appendChild(vertical);
+
+          const horizontal = document.createElementNS(svgNS, 'line');
+          const y = centre - i * unit;
+          horizontal.setAttribute('x1', 38);
+          horizontal.setAttribute('x2', 462);
+          horizontal.setAttribute('y1', y);
+          horizontal.setAttribute('y2', y);
+          horizontal.setAttribute('stroke', '#b8c0cc');
+          horizontal.setAttribute('stroke-width', '1');
+          grid.appendChild(horizontal);
+        }
+
+        const xText = document.createElementNS(svgNS, 'text');
+        xText.setAttribute('class', 'tick');
+        xText.setAttribute('x', centre + i * unit);
+        xText.setAttribute('y', 266);
+        xText.setAttribute('text-anchor', 'middle');
+        xText.textContent = i;
+        grid.appendChild(xText);
+
+        const yText = document.createElementNS(svgNS, 'text');
+        yText.setAttribute('class', 'tick');
+        yText.setAttribute('x', 240);
+        yText.setAttribute('y', centre - i * unit + 4);
+        yText.setAttribute('text-anchor', 'end');
+        yText.textContent = i;
+        grid.appendChild(yText);
+      }
+    }
+
+    function formatNumber(n) {
+      const rounded = Math.round(n * 100) / 100;
+      return Number.isInteger(rounded) ? String(rounded) : String(rounded);
+    }
+
+    function setEquation(r) {
+      const r2 = Math.round(r * r * 100) / 100;
+      radiusValue.textContent = formatNumber(r);
+      document.getElementById('radiusInEquation').textContent = formatNumber(r);
+      document.getElementById('squaredValue').textContent = formatNumber(r2);
+    }
+
+    function updateTriangleVisibility(box) {
+      const show = showTriangleInput.checked;
+      baseLine.style.display = show ? '' : 'none';
+      heightLine.style.display = show ? '' : 'none';
+      xLabel.style.display = show ? '' : 'none';
+      yLabel.style.display = show ? '' : 'none';
+      rightAngle.style.display = show && box >= 4 ? '' : 'none';
+    }
+
+    function updateScene() {
+      const r = Number(radiusInput.value);
+      const radiusPx = r * unit;
+      const px = centre + radiusPx * Math.cos(angle);
+      const py = centre - radiusPx * Math.sin(angle);
+
+      circle.setAttribute('r', radiusPx);
+      point.setAttribute('cx', px);
+      point.setAttribute('cy', py);
+
+      radiusLine.setAttribute('x2', px);
+      radiusLine.setAttribute('y2', py);
+
+      baseLine.setAttribute('x1', centre);
+      baseLine.setAttribute('y1', centre);
+      baseLine.setAttribute('x2', px);
+      baseLine.setAttribute('y2', centre);
+
+      heightLine.setAttribute('x1', px);
+      heightLine.setAttribute('y1', centre);
+      heightLine.setAttribute('x2', px);
+      heightLine.setAttribute('y2', py);
+
+      const box = Math.min(13, Math.max(0, Math.min(Math.abs(px - centre), Math.abs(py - centre)) * 0.40));
+      const dirX = px >= centre ? 1 : -1;
+      const dirY = py <= centre ? -1 : 1;
+      const p1x = px, p1y = centre;
+      const p2x = px - dirX * box, p2y = centre;
+      const p3x = px - dirX * box, p3y = centre + dirY * box;
+      const p4x = px, p4y = centre + dirY * box;
+      rightAngle.setAttribute('d', `M ${p1x} ${p1y} L ${p2x} ${p2y} L ${p3x} ${p3y} L ${p4x} ${p4y}`);
+
+      const midBaseX = (centre + px) / 2;
+      xLabel.setAttribute('x', midBaseX);
+      xLabel.setAttribute('y', centre + (py <= centre ? 21 : -12));
+
+      const midHeightY = (centre + py) / 2;
+      yLabel.setAttribute('x', px + (px <= centre ? -14 : 14));
+      yLabel.setAttribute('y', midHeightY + 5);
+
+      updateTriangleVisibility(box);
+      setEquation(r);
+    }
+
+    radiusInput.addEventListener('input', updateScene);
+    showTriangleInput.addEventListener('change', updateScene);
+
+    function eventToAngle(event) {
+      const ctm = svg.getScreenCTM();
+      if (!ctm) return angle;
+      const pos = new DOMPoint(event.clientX, event.clientY).matrixTransform(ctm.inverse());
+      return Math.atan2(centre - pos.y, pos.x - centre);
+    }
+
+    let dragging = false;
+
+    function startDrag(event) {
+      dragging = true;
+      point.style.cursor = 'grabbing';
+      point.setPointerCapture(event.pointerId);
+      angle = eventToAngle(event);
+      updateScene();
+      event.preventDefault();
+    }
+
+    function duringDrag(event) {
+      if (!dragging) return;
+      angle = eventToAngle(event);
+      updateScene();
+      event.preventDefault();
+    }
+
+    function endDrag(event) {
+      dragging = false;
+      point.style.cursor = 'grab';
+      if (event && typeof point.releasePointerCapture === 'function') {
+        try { point.releasePointerCapture(event.pointerId); } catch (e) {}
+      }
+    }
+
+    point.addEventListener('pointerdown', startDrag);
+    svg.addEventListener('pointermove', duringDrag);
+    window.addEventListener('pointerup', endDrag);
+    window.addEventListener('pointercancel', endDrag);
+
+    addGrid();
+    updateScene();
+
+    const source = 'https://raw.githubusercontent.com/startutornw/Star-Maths-Tutor-Resources/main/Trig_Graphs.html';
+    fetch(source)
+      .then(response => {
+        if (!response.ok) throw new Error('Logo source unavailable');
+        return response.text();
+      })
+      .then(html => {
+        const page = new DOMParser().parseFromString(html, 'text/html');
+        const original = page.querySelector('img.titleLogo');
+        if (!original) return;
+        let src = original.getAttribute('src');
+        if (!src) return;
+        src = new URL(src, 'https://startutornw.github.io/Star-Maths-Tutor-Resources/').href;
+        const logo = document.getElementById('logo');
+        logo.onload = () => { logo.style.display = 'block'; };
+        logo.src = src;
+      })
+      .catch(() => {});
+  </script>
+</body>
+</html>
